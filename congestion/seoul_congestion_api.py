@@ -1,30 +1,58 @@
 """
-location
+TEST API 분석
 """
+import configparser
+from pathlib import Path
+from typing import Callable
 
-import json
 import requests
-import pandas as pd
 import xmltodict
-import time
+import pandas as pd
+from requests.exceptions import RequestException
 
 
-def location_bus_drop_place() -> list:
-    data = pd.read_excel("dd.xlsx")
+path = Path(__file__).parent.parent
+parser = configparser.ConfigParser()
+parser.read(f"{path}/setting/setting.conf")
+key: str = parser.get("api", "key")
+
+
+def excel_get_locations(filename: str = "dd.xlsx") -> Callable[[], list]:
+    """
+    TEST CODE
+    """
+    data = pd.read_excel(filename)
     del data["번호"]
-
-    return [i for i in data["장소명"]]
-
-
-def xml_to_json(xml_string: requests):
-    # XML 파싱하여 사전 형태로 변환
-    xml_dict = xmltodict.parse(xml_string)
-
-    return xml_dict
+    return list(data["장소명"])
 
 
-def ma_a():
-    # url: str = f"http://openapi.seoul.go.kr:8088/5a58577451736b7936374968584359/xml/citydata/1/1000/노량진"
-    url: str = f"http://openapi.seoul.go.kr:8088/5a58577451736b7936374968584359/xml/citydata_ppltn/1/1000/노량진"
-    req = requests.get(url).text
-    return xml_to_json(req)
+def make_request_and_get_response(url: str) -> Callable[[], str]:
+    """
+    TEST CODE
+    """
+
+    def convert_xml_to_dict(xml_string: str) -> Callable[[], dict]:
+        """
+        TEST deco
+        """
+        return xmltodict.parse(xml_string)
+
+    response = requests.get(url, timeout=10)
+    match response.status_code:
+        case 200:
+            return convert_xml_to_dict(response.text)
+        case _:
+            raise RequestException(f"API 호출의 에러가 일어났습니다 --> {response.status_code}")
+
+
+def main():
+    """
+    TEST CODE
+    """
+    url = f"http://openapi.seoul.go.kr:8088/{key}/xml/citydata_ppltn/1/1000/구로디지털단지역"
+    get_response = make_request_and_get_response(url)
+    print(get_response)
+
+
+if __name__ == "__main__":
+    main()
