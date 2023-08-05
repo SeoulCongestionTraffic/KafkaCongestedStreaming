@@ -3,7 +3,7 @@ TEST API 분석
 """
 import configparser
 from pathlib import Path
-from typing import Callable
+from typing import Any
 
 import requests
 import xmltodict
@@ -17,7 +17,7 @@ parser.read(f"{path}/setting/setting.conf")
 key: str = parser.get("api", "key")
 
 
-def excel_get_locations(filename: str = "dd.xlsx") -> Callable[[], list]:
+def excel_get_locations(filename: str = "dd.xlsx") -> list[str]:
     """
     TEST CODE
     """
@@ -26,12 +26,12 @@ def excel_get_locations(filename: str = "dd.xlsx") -> Callable[[], list]:
     return list(data["장소명"])
 
 
-def make_request_and_get_response(url: str) -> Callable[[], str]:
+def make_request_and_get_response(url: str) -> Any:
     """
     TEST CODE
     """
 
-    def convert_xml_to_dict(xml_string: str) -> Callable[[], dict]:
+    def convert_xml_to_dict(xml_string: str) -> dict[str, Any]:
         """
         TEST deco
         """
