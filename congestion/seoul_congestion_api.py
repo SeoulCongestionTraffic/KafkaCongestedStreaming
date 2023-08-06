@@ -1,7 +1,6 @@
 """
 TEST API 분석
 """
-import configparser
 from pathlib import Path
 from typing import Any
 
@@ -9,21 +8,15 @@ import requests
 import xmltodict
 import pandas as pd
 from requests.exceptions import RequestException
+from setting.properties import API_KEY, URL
 
 
-path = Path(__file__).parent.parent
-parser = configparser.ConfigParser()
-parser.read(f"{path}/setting/setting.conf")
-key: str = parser.get("api", "key")
-
-
-def excel_get_locations(filename: str = "dd.xlsx") -> list[str]:
+def excel_get_locations(filename: str = "setting/place.xlsx") -> list[str]:
     """
     TEST CODE
     """
-    data = pd.read_excel(filename)
-    del data["번호"]
-    return list(data["장소명"])
+    excel_location = Path(__file__).parent
+    return list(pd.read_excel(f"{excel_location}/{filename}")["장소명"])
 
 
 def make_request_and_get_response(url: str) -> Any:
@@ -45,14 +38,17 @@ def make_request_and_get_response(url: str) -> Any:
             raise RequestException(f"API 호출의 에러가 일어났습니다 --> {response.status_code}")
 
 
-def main():
+def congestion(place: str):
     """
     TEST CODE
     """
-    url = f"http://openapi.seoul.go.kr:8088/{key}/xml/citydata_ppltn/1/1000/구로디지털단지역"
-    get_response = make_request_and_get_response(url)
-    print(get_response)
+    url = f"{URL}/{API_KEY}/xml/citydata_ppltn/1/1000/{place}"
+    return make_request_and_get_response(url)
 
 
 if __name__ == "__main__":
-    main()
+    from contextlib import suppress
+
+    with suppress(KeyError):
+        for plcae in excel_get_locations():
+            print(congestion(place=plcae)["Map"]["SeoulRtd.citydata_ppltn"])
