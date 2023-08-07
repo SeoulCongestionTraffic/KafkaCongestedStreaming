@@ -1,5 +1,5 @@
 """
-TEST API 분석
+HTTP architecture 시작
 """
 from pathlib import Path
 from typing import Any
@@ -11,12 +11,13 @@ from requests.exceptions import RequestException
 from setting.properties import API_KEY, URL
 
 
-def excel_get_locations(filename: str = "setting/place.xlsx") -> list[str]:
+def csv_get_locations(filename: str = "setting/seoul_place.csv") -> list[str]:
     """
-    TEST CODE
+    지역별 코드
     """
     excel_location = Path(__file__).parent
-    return list(pd.read_excel(f"{excel_location}/{filename}")["장소명"])
+    place_data = pd.read_csv(f"{excel_location}/{filename}").groupby("CATEGORY")
+    return list(place_data)
 
 
 def make_request_and_get_response(url: str) -> Any:
@@ -44,11 +45,3 @@ def congestion(place: str):
     """
     url = f"{URL}/{API_KEY}/xml/citydata_ppltn/1/1000/{place}"
     return make_request_and_get_response(url)
-
-
-if __name__ == "__main__":
-    from contextlib import suppress
-
-    with suppress(KeyError):
-        for plcae in excel_get_locations():
-            print(congestion(place=plcae)["Map"]["SeoulRtd.citydata_ppltn"])
