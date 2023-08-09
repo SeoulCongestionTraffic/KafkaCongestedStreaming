@@ -14,16 +14,12 @@ from aiokafka.errors import (
     KafkaProtocolError,
 )
 
-from congestion.setting.create_log import log
+from core.setting.create_log import log
 
 present_path = Path(__file__).parent.parent
-try:
-    logging = log(
-        log_location=f"{present_path}/log/kafka_message.log", name="messge_sending"
-    )
-except (FileNotFoundError, FileExistsError):
-    log_path = present_path / "log" / "kafka_message.log"
-    log_path.parent.mkdir(parents=True, exist_ok=True)
+logging = log(
+    log_location=f"{present_path}/log/kafka_message.log", name="messge_sending"
+)
 
 
 except_list = defaultdict(list)
@@ -39,17 +35,18 @@ async def produce_sending(topic: Any, message: Any, key: Any = None):
         "security_protocol": "PLAINTEXT",
         "max_batch_size": 16384,
         "acks": "all",
+        "key_serializer": lambda key: key.encode("utf-8"),
+        "value_serializer": lambda value: json.dumps(value).encode("utf-8"),
     }
-    producer = AIOKafkaProducer(**config, key_serializer=key)
+    producer = AIOKafkaProducer(**config)
 
     await producer.start()
     if isinstance(message, bytes):
         message = message.decode("utf-8")
 
     try:
-        encoded_message = json.dumps(message).encode("utf-8")
-        await producer.send_and_wait(topic, encoded_message)
-        size: int = sys.getsizeof(encoded_message)
+        await producer.send_and_wait(topic=topic, value=message, key=key)
+        size: int = sys.getsizeof(message)
         logging.info(
             "Message delivered to: %s --> counting --> %s size --> %s",
             topic,

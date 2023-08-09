@@ -6,9 +6,10 @@ import configparser
 from pathlib import Path
 
 
-path = Path(__file__).parent
+path = Path(__file__).parent.parent
 parser = configparser.ConfigParser()
-parser.read(f"{path}/setting.conf")
+print(path)
+parser.read(f"{path}/config/setting.conf")
 
 API_KEY: str = parser.get("API", "key")
 URL: str = parser.get("API", "url")

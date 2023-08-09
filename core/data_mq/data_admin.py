@@ -4,7 +4,7 @@ KAKFA NEW TOPIC CREATE
 from pathlib import Path
 from confluent_kafka.admin import AdminClient, NewTopic
 from confluent_kafka.error import KafkaError, KafkaException, ProduceError
-from congestion.setting.create_log import log
+from core.setting.create_log import log
 
 present_path = Path(__file__).parent.parent
 logger = log(
@@ -34,7 +34,7 @@ def new_topic_initialization(
     for topic, f in create_topic.items():
         try:
             f.result()
-            logger.info(f"Topic create -> {topic}")
+            logger.info("Topic create -> %s", topic)
         except (KafkaException, KafkaError, ProduceError) as error:
             if error.args[0].code() != KafkaError.TOPIC_ALREADY_EXISTS:
                 logger.error("Failed to create topic --> %s: %s", topic, error)

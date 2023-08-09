@@ -162,6 +162,5 @@ cython_debug/
 congestion/setting/setting.conf
 congestion/setting/place.xlsx
 api.txt
-test.py
 poetry.lock
 pyproject.toml

@@ -32,13 +32,22 @@ def log(name: str, log_location: str) -> logging.Logger:
         file_handler = logging.FileHandler(filename=log_location)
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
-    except Exception as e:
-        logger.error(f"Failed to create file handler due to: {e}")
+    except (FileNotFoundError, FileExistsError) as error:
+        logger.error("Failed to create file handler due to: %s", error)
+        # 파일이 없을 때 파일을 생성하도록 수정
+        Path(log_location).parent.mkdir(parents=True, exist_ok=True)
+        file_handler = logging.FileHandler(filename=log_location)
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
 
     return logger
 
 
 class SocketLogCustomer:
+    """
+    Log 생성 정형화
+    """
+
     def __init__(self, base_path: Path = None):
         """
         기본 또는 지정된 base_path로 SocketLogCustomer를 초기화합니다.
@@ -66,9 +75,9 @@ class SocketLogCustomer:
             log_path = self.base_path / log_type / log_name
             log_path.parent.mkdir(parents=True, exist_ok=True)
             return log(log_name.split(".")[0], str(log_path))
-        except Exception as e:
+        except (FileNotFoundError, FileExistsError) as error:
             logger = logging.getLogger(__name__)
-            logger.error(f"Failed to create or access the log file: {e}")
+            logger.error("Failed to create or access the log file: %s", error)
             return logger
 
     async def log_message(
