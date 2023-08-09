@@ -159,8 +159,7 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 .vscode
-congestion/setting/setting.conf
-congestion/setting/place.xlsx
+core/config/setting.conf
 api.txt
 poetry.lock
 pyproject.toml
