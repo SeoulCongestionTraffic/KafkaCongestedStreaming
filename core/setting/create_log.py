@@ -1,10 +1,14 @@
+"""
+로그
+"""
+
 import logging
 from pathlib import Path
 
 
 def log(name: str, log_location: str) -> logging.Logger:
     """
-    주어진 이름으로 로거를 생성하거나 가져옵니다. 스트림 및 파일 핸들러가 존재하지 않는 경우 로거에 추가합니다.
+    주어진 이름으로 로거를 생성. 스트림 및 파일 핸들러가 존재하지 않는 경우 로거에 추가
 
     매개변수:
     - name: 로거의 이름.
@@ -48,9 +52,9 @@ class SocketLogCustomer:
     Log 생성 정형화
     """
 
-    def __init__(self, base_path: Path = None):
+    def __init__(self, base_path: Path = None) -> None:
         """
-        기본 또는 지정된 base_path로 SocketLogCustomer를 초기화합니다.
+        기본 또는 지정된 base_path로 SocketLogCustomer를 초기화
 
         매개변수:
         - base_path: 로그 파일이 저장될 경로.
@@ -62,7 +66,7 @@ class SocketLogCustomer:
 
     def create_logger(self, log_name: str, log_type: str) -> logging.Logger:
         """
-        지정된 로그 이름과 유형을 사용하여 로거를 생성합니다.
+        지정된 로그 이름과 유형을 사용하여 로거를 생성
 
         매개변수:
         - log_name: 로그 파일의 이름.
@@ -84,7 +88,7 @@ class SocketLogCustomer:
         self, log_name: str, log_type: str, message: str, level: str = "info"
     ):
         """
-        지정된 로그 이름, 유형 및 레벨을 사용하여 메시지를 기록합니다.
+        지정된 로그 이름, 유형 및 레벨을 사용하여 메시지를 기록
 
         매개변수:
         - log_name: 로그 파일의 이름.
@@ -96,9 +100,9 @@ class SocketLogCustomer:
         log_func = getattr(logger, level, "info")
         log_func(message)
 
-    async def connection(self, location: str, message: str):
+    async def connection(self, location: str, message: str) -> None:
         """
-        특정 거래소와 관련된 연결 메시지를 기록합니다.
+        특정 장소 관련된 연결 메시지를 기록
 
         매개변수:
         - location: 장소의 이름.
@@ -107,10 +111,24 @@ class SocketLogCustomer:
         log_name = f"{location}_connection.log"
         await self.log_message(log_name, "connection", message)
 
-    async def data_log(self, location: str, message: str):
+    async def data_log(self, location: str, message: str) -> None:
+        """
+        특정 장소 생성된 데이터 기록
+
+        매개변수
+        - location: 장소
+        - message: 데이터 기록
+        """
         log_name = f"{location}_data.log"
         await self.log_message(log_name, "data", message)
 
-    async def error_log(self, error_type: str, message: str):
+    async def error_log(self, error_type: str, message: str) -> None:
+        """
+        에러로그
+
+        매개변수
+        - error_type: 에러 타입
+        - message: 메시지 타입
+        """
         log_name = f"{error_type}.log"
         await self.log_message(log_name, "error", message, level="error")
