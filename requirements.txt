@@ -1,0 +1,6 @@
+aiokafka
+aiohttp
+pandas
+numpy
+requests
+xmltodict
