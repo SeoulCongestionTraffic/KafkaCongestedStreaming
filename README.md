@@ -56,8 +56,6 @@
 88	RTE_SECT	노선구간
 89	RTE_CONGEST	노선혼잡도
 }
-```
-
 
 92	ACDNT_CNTRL_STTS	사고통제현황 {
 93	ACDNT_OCCR_DT	사고발생일시
@@ -66,3 +64,7 @@
 96	ACDNT_DTYPE	사고발생세부유형
 97	ACDNT_INFO	사고통제내용
 }
+
+```
+
+
