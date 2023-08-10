@@ -15,6 +15,12 @@ from aiokafka.errors import (
 )
 
 from core.setting.create_log import log
+from core.setting.properties import (
+    BOOTSTRAP_SERVER,
+    SECURITY_PROTOCOL,
+    MAX_BATCH_SIZE,
+    ARCKS,
+)
 
 present_path = Path(__file__).parent.parent
 logging = log(
@@ -31,10 +37,10 @@ async def produce_sending(topic: Any, message: Any, key: Any = None):
 
     """
     config = {
-        "bootstrap_servers": "kafka1:19092, kafka2:29092, kafka3:39092",
-        "security_protocol": "PLAINTEXT",
-        "max_batch_size": 16384,
-        "acks": "all",
+        "bootstrap_servers": f"{BOOTSTRAP_SERVER}",
+        "security_protocol": f"{SECURITY_PROTOCOL}",
+        "max_batch_size": int(f"{MAX_BATCH_SIZE}"),
+        "acks": f"{ARCKS}",
         "key_serializer": lambda key: key.encode("utf-8"),
         "value_serializer": lambda value: json.dumps(value).encode("utf-8"),
     }
