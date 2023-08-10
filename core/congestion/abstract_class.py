@@ -3,6 +3,7 @@
 """
 
 from abc import ABC, abstractmethod
+from core.setting.create_log import SocketLogCustomer
 
 
 class AbstractAsyncResponseDataFactory(ABC):
@@ -62,5 +63,45 @@ class AbstractPlaceLocationClassifier(ABC):
 
         Returns:
         - dict[str, list[str]]: 카테고리별 지역 이름의 리스트를 값으로 하는 딕셔너리.
+        """
+        raise NotImplementedError()
+
+
+class AbstractSeoulDataSending(ABC):
+    """
+    Abstuact class for seoul place kafka data sending
+    """
+
+    def __init__(self) -> None:
+        self.logging = SocketLogCustomer()
+
+    @abstractmethod
+    async def congestion_response(
+        self, location: str, city_type: str = "citydata_ppltn"
+    ) -> dict:
+        """
+        주어진 위치에 대한 혼잡도 정보를 비동기로 요청.
+
+        Parameters:
+        - location (str): 혼잡도 정보를 요청할 지역의 이름.
+
+        Returns:
+        - dict: 해당 위치의 혼잡도 정보.
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def async_data_sending(self, category: str, location: str):
+        """
+        인구 혼잡도 kafka 연결
+        - category: 지역
+        - location: 장소
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def async_popular_congestion(self):
+        """
+        인구 혼잡도 kafka 연결
         """
         raise NotImplementedError()
