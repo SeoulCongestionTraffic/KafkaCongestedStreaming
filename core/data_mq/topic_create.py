@@ -34,8 +34,8 @@ def create_topic() -> None:
         POPULATED_AREA_NOT_FCST_YN,
         PARK_NOT_FCST_YN,
     ]
-    partition = [3 for _ in range(len(topic))]
-    replication = [3 for _ in range(len(topic))]
+    partition: list[int] = [3 for _ in range(len(topic))]
+    replication: list[int] = [3 for _ in range(len(topic))]
 
     return new_topic_initialization(
         topic=topic, partition=partition, replication_factor=replication
