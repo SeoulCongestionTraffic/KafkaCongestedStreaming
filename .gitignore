@@ -163,3 +163,5 @@ core/config/setting.conf
 api.txt
 poetry.lock
 pyproject.toml
+test.py
+test2.py
