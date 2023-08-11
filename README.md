@@ -6,7 +6,7 @@
 ![도시혼잡도 drawio (1)](https://github.com/SeoulCongestionTraffic/SeoulCongestedStreaming/assets/52487610/8a8e7ce1-420c-45e6-883c-355ceee4a540)
 
 
-### URL 
+### 서울시 도시혼잡도 URL 
 - https://data.seoul.go.kr/SeoulRtd/
 
 ### 실시간 인구 API 
