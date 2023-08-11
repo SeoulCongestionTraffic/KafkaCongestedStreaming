@@ -1,6 +1,11 @@
 # SeoulCongestedStreaming
 
 ## 서울 시 실시간 도시 혼잡도 작성
+
+### architecture 
+![도시혼잡도 drawio (1)](https://github.com/SeoulCongestionTraffic/SeoulCongestedStreaming/assets/52487610/8a8e7ce1-420c-45e6-883c-355ceee4a540)
+
+
 ### URL 
 - https://data.seoul.go.kr/SeoulRtd/
 
@@ -39,7 +44,7 @@
 ```
 
 
-### 현재 진행중
+### 현재 진행중(스키마 정제중)
 - 인구별 혼잡도
 - 나이별 인구 비율
 - 해당 지역 인구 비율
