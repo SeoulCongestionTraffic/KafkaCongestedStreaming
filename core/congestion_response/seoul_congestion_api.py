@@ -9,8 +9,8 @@ from aiokafka.errors import KafkaConnectionError
 from core.setting.properties import API_KEY, URL
 from core.data_mq.data_interaction import produce_sending
 from core.data_mq.topic_create import create_topic
-from core.congestion.abstract_class import AbstractSeoulDataSending
-from core.congestion.utils import seoul_place, AsyncResponseDataFactory
+from core.congestion_response.abstract_class import AbstractSeoulDataSending
+from core.congestion_response.utils import seoul_place, AsyncResponseDataFactory
 
 tracemalloc.start()
 

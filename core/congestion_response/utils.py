@@ -9,7 +9,7 @@ import xmltodict
 import pandas as pd
 from requests.exceptions import RequestException
 
-from core.congestion.abstract_class import (
+from core.congestion_response.abstract_class import (
     AbstractAsyncResponseDataFactory,
     AbstractPlaceLocationClassifier,
 )
