@@ -38,7 +38,7 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
         data = await AsyncResponseDataFactory().create_response(url=url)
         return data["Map"]["SeoulRtd.citydata_ppltn"]
 
-    async def async_data_sending_(self, category: str, location: str) -> None:
+    async def async_data_sending(self, category: str, location: str) -> None:
         """
         인구 혼잡도 kafka 연결
         - category: 지역

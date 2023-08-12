@@ -76,7 +76,7 @@ class AbstractSeoulDataSending(ABC):
         self.logging = SocketLogCustomer()
 
     @abstractmethod
-    async def congestion_response(
+    async def async_congestion_response(
         self, location: str, city_type: str = "citydata_ppltn"
     ) -> dict:
         """
