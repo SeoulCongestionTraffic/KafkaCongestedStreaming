@@ -3,7 +3,7 @@
 ## 서울 시 실시간 도시 혼잡도 작성
 
 ### architecture 
-![도시혼잡도 drawio (1)](https://github.com/SeoulCongestionTraffic/SeoulCongestedStreaming/assets/52487610/8a8e7ce1-420c-45e6-883c-355ceee4a540)
+<img width="1113" alt="image" src="https://github.com/SeoulCongestionTraffic/SeoulCongestedStreaming/assets/52487610/883db05f-9bd3-4f0a-a2fa-d65ccd6ce7a5">
 
 
 ### 서울시 도시혼잡도 URL 
