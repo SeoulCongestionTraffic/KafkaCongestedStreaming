@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import logging
 from pydantic import BaseModel, ValidationError
+from core.setting.properties import lowercase_keys
 
 
 class BasePopulationRate(BaseModel):
@@ -15,6 +16,30 @@ class BasePopulationRate(BaseModel):
     area_congestion_msg: str
     area_ppltn_min: int
     area_ppltn_max: int
+    fcst_yn: str
+
+    @staticmethod
+    def _predict_yn(data: dict[str, str]) -> dict | str:
+        """인구 예측값 제공 여부
+
+        Args:
+            data (dict[str, str]): 서울시 도시 실시간 인구 혼잡도 API
+
+        Returns:
+            str: N
+            dict: 혼잡도 예측 데이터
+        """
+        match data["FCST_YN"]:
+            case "Y":
+                return lowercase_keys(data["FCST_PPLTN"])
+            case "N":
+                return "N"
+
+    @staticmethod
+    def _rate_ppltn_extract(data: dict[str, str], keyword: str) -> dict[str, float]:
+        return {
+            key.lower(): float(value) for key, value in data.items() if keyword in key
+        }
 
     @classmethod
     def schmea_extract(
@@ -38,18 +63,16 @@ class BasePopulationRate(BaseModel):
                 area_ppltn_min=int(data["AREA_PPLTN_MIN"]),
                 area_ppltn_max=int(data["AREA_PPLTN_MAX"]),
                 **{rate_key: cls._rate_ppltn_extract(data=data, keyword=keyword)},
+                fcst_yn=cls._predict_yn(data=data["FCST_YN"]),
             )
         except ValidationError as error:
             logging.error("schem extract error --> %s", error)
 
-    @staticmethod
-    def _rate_ppltn_extract(data: dict[str, str], keyword: str) -> dict[str, float]:
-        return {
-            key.lower(): float(value) for key, value in data.items() if keyword in data
-        }
+
+# ------------------------------------------------------------------------------------------------------------#
 
 
-class AgeCongestionSpecific(BasePopulationRate):
+class AgeCongestionSpecific(BaseModel):
     """각 나이대별 혼잡도 비율"""
 
     ppltn_rate_0: float
@@ -68,7 +91,7 @@ class TotalAgeRateComposition(BasePopulationRate):
     age_congestion_specific: AgeCongestionSpecific
 
     @classmethod
-    def schmea_modify(cls, data: dict[str, str]) -> BasePopulationRate:
+    def schema_modify(cls, data: dict[str, str]) -> BasePopulationRate:
         """
         Args:
             - data (dict[str, str]): 서울시 도시 실시간 인구 혼잡도 API
@@ -80,6 +103,12 @@ class TotalAgeRateComposition(BasePopulationRate):
             "area_congestion_msg": "사람이 몰려있을 수 있지만 크게 붐비지는 않아요. 도보 이동에 큰 제약이 없어요.",
             "area_ppltn_min": 30000,
             "area_ppltn_max": 32000,
+            "fcst_yn":{
+                "fcst_ppltn: [
+                    ~~
+                ]
+            },
+            or "fcst_yn": "N"
             "age_congestion_specific": {
                 "ppltn_rate_0": 0.3,
                 "ppltn_rate_10": 5.7,
@@ -95,7 +124,10 @@ class TotalAgeRateComposition(BasePopulationRate):
         return super().schmea_extract(data, "age_congestion_specific", "PPLTN_RATE_")
 
 
-class AreaGenderRate(BasePopulationRate):
+# ------------------------------------------------------------------------------------------------------------#
+
+
+class AreaGenderRate(BaseModel):
     """여성 남성 혼잡도"""
 
     male_ppltn_rate: float
@@ -108,7 +140,7 @@ class AreaGenderRateSpecific(BasePopulationRate):
     gender_rate: AreaGenderRate
 
     @classmethod
-    def schmea_modify(cls, data: dict[str, str]) -> BasePopulationRate:
+    def schema_modify(cls, data: dict[str, str]) -> BasePopulationRate:
         """
         Args:
             - data (dict[str, str]): 서울시 도시 실시간 인구 혼잡도 API
@@ -121,6 +153,12 @@ class AreaGenderRateSpecific(BasePopulationRate):
             "area_congestion_msg": "사람이 몰려있을 수 있지만 크게 붐비지는 않아요. 도보 이동에 큰 제약이 없어요.",
             "area_ppltn_min": 30000,
             "area_ppltn_max": 32000,
+            "fcst_yn":{
+                "fcst_ppltn: [
+                    ~~
+                ]
+            },
+            or "fcst_yn": "N"
             "gender_rate": {
                 "male_ppltn_rate": 44.2,
                 "female_ppltn_rate": 55.8

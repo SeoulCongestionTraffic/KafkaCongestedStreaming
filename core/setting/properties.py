@@ -61,3 +61,39 @@ def deep_getsizeof(obj, seen=None) -> int:
         size += sum(deep_getsizeof(i, seen) for i in obj)
 
     return size
+
+
+# 대문자 소문자 변환
+def lowercase_keys(obj):
+    """
+    대문자를 소문자로 재귀호출
+
+    parameter
+        - obj: dict or list comfact\n
+
+    return:
+    >>> {
+        "area_name": "가로수길",
+        "area_congestion_lvl": "보통",
+        "area_congestion_msg": "사람이 몰려있을 수 있지만 크게 붐비지는 않아요. 도보 이동에 큰 제약이 없어요.",
+        "area_ppltn_min": 30000,
+        "area_ppltn_max": 32000,
+        "fcst_yn": "N",
+        "age_congestion_specific": {
+            "ppltn_rate_0": 0.3,
+            "ppltn_rate_10": 5.7,
+            "ppltn_rate_20": 26.9,
+            "ppltn_rate_30": 26.4,
+            "ppltn_rate_40": 18.9,
+            "ppltn_rate_50": 11.7,
+            "ppltn_rate_60": 6.3,
+            "ppltn_rate_70": 3.7,
+        },
+    }
+
+    """
+    if isinstance(obj, list):
+        return [lowercase_keys(data) for data in obj]
+    if isinstance(obj, dict):
+        return {k.lower: lowercase_keys(v) for k, v in obj.items()}
+    return obj
