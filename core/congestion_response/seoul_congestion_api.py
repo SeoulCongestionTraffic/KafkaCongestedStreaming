@@ -34,7 +34,7 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
 
     async def async_congestion_response(
         self, location: str, city_type: str = "citydata_ppltn"
-    ) -> dict[str, Union[str, dict[str, list[str, str]]]]:
+    ) -> dict[str, Union[str, dict[str, list[str]]]]:
         """
         주어진 위치에 대한 혼잡도 정보를 비동기로 요청
 
@@ -43,7 +43,7 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
             city_type (str, optional): 도시 데이터 타입. 기본값은 "citydata_ppltn".
 
         반환값:
-            dict[str, Union[str, dict[str, str]]]: 지정된 위치의 혼잡도 정보.
+            dict[str, Union[str, dict[str, list[str, str]]]: 지정된 위치의 혼잡도 정보.
         """
         try:
             url = f"{URL}/{API_KEY}/xml/{city_type}/1/1000/{location}"
@@ -66,17 +66,19 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
             - location (str): 장소
             - rate_type (str): 혼잡도 타입
         """
-        age_rate = self._strategy.transfor(congest)
+        rate_schema: dict = self._strategy.transform(congest)
         try:
             match congest["FCST_YN"]:
                 case "Y":
                     await produce_sending(
-                        topic=f"{category}_{rate_type}", message=age_rate, key=location
+                        topic=f"{category}_{rate_type}",
+                        message=rate_schema,
+                        key=location,
                     )
                 case "N":
                     await produce_sending(
                         topic=f"{category}_not_FCST_YN_{rate_type}",
-                        message=TRC.schema_modify(congest),
+                        message=rate_schema,
                         key=location,
                     )
         except KafkaConnectionError as error:
@@ -84,7 +86,9 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
                 error_type="kafka_connection", message=f"Kafk 데이터 전송 실패 --> {error}"
             )
 
-    async def data_normalization(self, category: str, location: str) -> None:
+    async def data_normalization(
+        self, category: str, location: str, rate_type: str
+    ) -> None:
         """
         인구 혼잡도 kafka 연결
         - category: 지역
@@ -93,11 +97,11 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
         for data in location:
             congest = await self.async_congestion_response(data)
             await self.async_data_sending(
-                congest=congest, category=category, location=data, rate_type="AGE"
+                congest=congest, category=category, location=data, rate_type=rate_type
             )
             await self.logging.data_log(location=category, message=congest)
 
-    async def async_popular_congestion(self) -> None:
+    async def async_popular_congestion(self, rate_type: str) -> None:
         """혼잡도 데이터를 기반으로 적절한 토픽에 데이터를 전송
 
         매개변수:
@@ -111,7 +115,9 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
             await asyncio.sleep(5)
             try:
                 for category, location in seoul_place().items():
-                    await self.data_normalization(category=category, location=location)
+                    await self.data_normalization(
+                        category=category, location=location, rate_type=rate_type
+                    )
 
             except KafkaConnectionError as error:
                 await self.logging.error_log(error_type="NotConnection", message=error)

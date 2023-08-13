@@ -91,7 +91,9 @@ class AbstractSeoulDataSending(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    async def data_normalization(self, category: str, location: str) -> None:
+    async def data_normalization(
+        self, category: str, location: str, rate_type: str
+    ) -> None:
         """
         인구 혼잡도 kafka 연결
         - category: 지역
@@ -117,7 +119,7 @@ class AbstractSeoulDataSending(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    async def async_popular_congestion(self) -> None:
+    async def async_popular_congestion(self, rate_type: str) -> None:
         """
         인구 혼잡도 kafka 연결
         """
