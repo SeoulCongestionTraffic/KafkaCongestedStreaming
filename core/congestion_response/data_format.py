@@ -16,7 +16,7 @@ class BasePopulationRate(BaseModel):
     area_congestion_msg: str
     area_ppltn_min: int
     area_ppltn_max: int
-    fcst_yn: str
+    fcst_yn: dict | str
 
     @staticmethod
     def _predict_yn(data: dict[str, str]) -> dict | str:
@@ -63,8 +63,8 @@ class BasePopulationRate(BaseModel):
                 area_ppltn_min=int(data["AREA_PPLTN_MIN"]),
                 area_ppltn_max=int(data["AREA_PPLTN_MAX"]),
                 **{rate_key: cls._rate_ppltn_extract(data=data, keyword=keyword)},
-                fcst_yn=cls._predict_yn(data=data["FCST_YN"]),
-            )
+                fcst_yn=cls._predict_yn(data=data),
+            ).model_dump()
         except ValidationError as error:
             logging.error("schem extract error --> %s", error)
 

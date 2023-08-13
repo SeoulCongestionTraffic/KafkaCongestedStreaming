@@ -39,6 +39,31 @@ TOURIST_SPECIAL_ZONE_NOT_FCST_YN: str = parser.get(
 )
 
 
+# TOPIC
+PALACE_AND_CULTURAL_HERITAGE_AGE: str = parser.get(
+    "RATETOPIC", "palace_and_cultural_heritage_AGE"
+)
+TOURIST_SPECIAL_ZONE_AGE: str = parser.get("RATETOPIC", "tourist_special_zone_AGE")
+DEVELOPED_MARKET_AGE: str = parser.get("RATETOPIC", "developed_market_AGE")
+POPULATED_AREA_AGE: str = parser.get("RATETOPIC", "populated_area_AGE")
+PARK_AGE: str = parser.get("RATETOPIC", "park_AGE")
+
+# RATETOPIC
+DEVELOPED_MARKET_NOT_FCST_YN_AGE: str = parser.get(
+    "RATETOPIC", "developed_market_not_FCST_YN_AGE"
+)
+POPULATED_AREA_NOT_FCST_YN_AGE: str = parser.get(
+    "RATETOPIC", "populated_area_not_FCST_YN_AGE"
+)
+PARK_NOT_FCST_YN_AGE: str = parser.get("RATETOPIC", "park_not_FCST_YN_AGE")
+PALACE_AND_CULTURAL_HERITAGE_NOT_FCST_YN_AGE: str = parser.get(
+    "RATETOPIC", "palace_and_cultural_heritage_not_FCST_YN_AGE"
+)
+TOURIST_SPECIAL_ZONE_NOT_FCST_YN_AGE: str = parser.get(
+    "RATETOPIC", "tourist_special_zone_not_FCST_YN_AGE"
+)
+
+
 # 메모리 계산
 def deep_getsizeof(obj, seen=None) -> int:
     """재귀적으로 객체의 메모리 사용량을 계산하는 함수"""
@@ -94,6 +119,6 @@ def lowercase_keys(obj):
     """
     if isinstance(obj, list):
         return [lowercase_keys(data) for data in obj]
-    if isinstance(obj, dict):
-        return {k.lower: lowercase_keys(v) for k, v in obj.items()}
+    elif isinstance(obj, dict):
+        return {k.lower(): lowercase_keys(v) for k, v in obj.items()}
     return obj

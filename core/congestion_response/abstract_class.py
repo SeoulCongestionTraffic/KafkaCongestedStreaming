@@ -1,7 +1,7 @@
 """
 추상화 집단
 """
-
+from typing import Any
 from abc import ABC, abstractmethod
 from core.setting.create_log import SocketLogCustomer
 
@@ -91,7 +91,7 @@ class AbstractSeoulDataSending(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    async def async_data_sending(self, category: str, location: str):
+    async def data_normalization(self, category: str, location: str) -> None:
         """
         인구 혼잡도 kafka 연결
         - category: 지역
@@ -100,8 +100,33 @@ class AbstractSeoulDataSending(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    async def async_popular_congestion(self):
+    async def async_data_sending(
+        self, congest: dict[str, Any], category: str, location: str, rate_type: str
+    ) -> None:
+        """데이터 전송 로직
+
+        Args:
+            - congest (dict[str, Any]): 혼잡도 데이터
+            - category (str): 지역
+            - location (str): 장소
+            - rate_type (str): 혼잡도 타입
+
+        Raises:
+            NotImplementedError: _description_
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def async_popular_congestion(self) -> None:
         """
         인구 혼잡도 kafka 연결
         """
         raise NotImplementedError()
+
+
+"""
+인구 혼잡도 kafka 연결
+데이터 kafka 전송
+- age_rate : 인구별 혼잡도
+- gender_rate : 성별 혼잡도
+"""
