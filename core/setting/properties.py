@@ -119,6 +119,6 @@ def lowercase_keys(obj):
     """
     if isinstance(obj, list):
         return [lowercase_keys(data) for data in obj]
-    elif isinstance(obj, dict):
+    if isinstance(obj, dict):
         return {k.lower(): lowercase_keys(v) for k, v in obj.items()}
     return obj

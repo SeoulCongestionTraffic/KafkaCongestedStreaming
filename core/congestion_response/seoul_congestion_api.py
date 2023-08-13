@@ -8,13 +8,13 @@ from typing import Any
 from aiokafka.errors import KafkaConnectionError
 
 from core.setting.properties import API_KEY, URL
+
 from core.data_mq.data_interaction import produce_sending
 from core.data_mq.topic_create import create_topic
 from core.congestion_response.utils import seoul_place, AsyncResponseDataFactory
 from core.congestion_response.abstract_class import AbstractSeoulDataSending
 from core.congestion_response.data_format import (
     TotalAgeRateComposition as TRC,
-    AreaGenderRateSpecific as AGRS,
 )
 
 tracemalloc.start()
@@ -51,7 +51,6 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
             - rate_type (str): 혼잡도 타입
         """
         age_rate = TRC.schema_modify(congest)  # 고민
-
         match congest["FCST_YN"]:
             case "Y":
                 await produce_sending(

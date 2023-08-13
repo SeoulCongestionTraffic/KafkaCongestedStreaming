@@ -122,11 +122,3 @@ class AbstractSeoulDataSending(ABC):
         인구 혼잡도 kafka 연결
         """
         raise NotImplementedError()
-
-
-"""
-인구 혼잡도 kafka 연결
-데이터 kafka 전송
-- age_rate : 인구별 혼잡도
-- gender_rate : 성별 혼잡도
-"""
