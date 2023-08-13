@@ -122,3 +122,21 @@ class AbstractSeoulDataSending(ABC):
         인구 혼잡도 kafka 연결
         """
         raise NotImplementedError()
+
+
+class AbstractDataTransforFactor(ABC):
+    """
+    Abstuact class for seoul place kafka data factor
+    """
+
+    @abstractmethod
+    def transform(self, data: dict[str, Any]) -> dict[str, Any]:
+        """데이터 변환
+        Args:
+            data (dict[str, Any]):
+                - 서울시 도시 데이터\n
+        Returns:
+            dict[str, Any]:
+                - 변형된 스키마
+        """
+        raise NotImplementedError()
