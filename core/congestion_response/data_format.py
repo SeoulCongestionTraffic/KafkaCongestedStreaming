@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 from enum import Enum
 from pydantic import BaseModel, ValidationError
-from core.setting.properties import transform_data, utc_time
+from core.congestion_response.utils import transform_data, utc_time
 
 
 class CongestionLevel(Enum):
