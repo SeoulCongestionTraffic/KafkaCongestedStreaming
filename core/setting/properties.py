@@ -2,8 +2,10 @@
 API에 필요한것들
 """
 import sys
+import time
 import configparser
 from pathlib import Path
+from datetime import datetime
 
 
 path = Path(__file__).parent.parent
@@ -112,6 +114,15 @@ def deep_getsizeof(obj, seen=None) -> int:
     return size
 
 
+def utc_time(location_time: str) -> float:
+    """utc time float transfor"""
+    # 문자열을 datetime 객체로 변환
+    date_time = datetime.strptime(location_time, "%Y-%m-%d %H:%M")
+
+    # datetime 객체를 유닉스 타임스탬프로 변환
+    return time.mktime(date_time.timetuple())
+
+
 # 대문자 소문자 변환
 def transform_data(obj):
     """
@@ -150,5 +161,7 @@ def transform_data(obj):
             new_obj["fcst_ppltn_min"] = float(new_obj["fcst_ppltn_min"])
         if "fcst_ppltn_max" in new_obj:
             new_obj["fcst_ppltn_max"] = float(new_obj["fcst_ppltn_max"])
+        if "fcst_time" in new_obj:
+            new_obj["fcst_time"] = utc_time(new_obj["fcst_time"])
         return new_obj
     return obj

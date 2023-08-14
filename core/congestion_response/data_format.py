@@ -8,15 +8,36 @@
 from __future__ import annotations
 
 import logging
+from enum import Enum
 from pydantic import BaseModel, ValidationError
-from core.setting.properties import transform_data
+from core.setting.properties import transform_data, utc_time
+
+
+class CongestionLevel(Enum):
+    """혼잡도 레벨 지정"""
+
+    여유 = 0
+    보통 = 1
+    약간 = 2
+    붐빔 = 3
+
+
+def get_congestion_value(input_string: str) -> int:
+    """혼잡도 레벨필터링"""
+    if "약간" in input_string:
+        return CongestionLevel.약간.value
+    try:
+        return CongestionLevel[input_string].value
+    except KeyError:
+        return None  # 혹은 필요에 따라 다른 처리를 할 수 있습니다.
 
 
 class BasePopulationRate(BaseModel):
     """공통 스키마"""
 
     area_name: str
-    area_congestion_lvl: str
+    ppltn_time: float
+    area_congestion_lvl: int
     area_congestion_msg: str
     area_ppltn_min: int
     area_ppltn_max: int
@@ -77,7 +98,8 @@ class BasePopulationRate(BaseModel):
         try:
             return cls(
                 area_name=data["AREA_NM"],
-                area_congestion_lvl=data["AREA_CONGEST_LVL"],
+                ppltn_time=utc_time(data["PPLTN_TIME"]),
+                area_congestion_lvl=get_congestion_value(data["AREA_CONGEST_LVL"]),
                 area_congestion_msg=data["AREA_CONGEST_MSG"],
                 area_ppltn_min=int(data["AREA_PPLTN_MIN"]),
                 area_ppltn_max=int(data["AREA_PPLTN_MAX"]),
