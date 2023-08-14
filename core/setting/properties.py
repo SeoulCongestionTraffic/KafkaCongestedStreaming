@@ -20,23 +20,71 @@ SECURITY_PROTOCOL: str = parser.get("KAFKA", "security_protocol")
 MAX_BATCH_SIZE: int = parser.get("KAFKA", "max_batch_size")
 ARCKS: str = parser.get("KAFKA", "acks")
 
-# TOPIC
-PALACE_AND_CULTURAL_HERITAGE: str = parser.get("TOPIC", "palace_and_cultural_heritage")
-TOURIST_SPECIAL_ZONE: str = parser.get("TOPIC", "tourist_special_zone")
-DEVELOPED_MARKET: str = parser.get("TOPIC", "developed_market")
-POPULATED_AREA: str = parser.get("TOPIC", "populated_area")
-PARK: str = parser.get("TOPIC", "park")
+# # TOPIC
+# PALACE_AND_CULTURAL_HERITAGE: str = parser.get("TOPIC", "palace_and_cultural_heritage")
+# TOURIST_SPECIAL_ZONE: str = parser.get("TOPIC", "tourist_special_zone")
+# DEVELOPED_MARKET: str = parser.get("TOPIC", "developed_market")
+# POPULATED_AREA: str = parser.get("TOPIC", "populated_area")
+# PARK: str = parser.get("TOPIC", "park")
 
-# TOPIC
-DEVELOPED_MARKET_NOT_FCST_YN: str = parser.get("TOPIC", "developed_market_not_FCST_YN")
-POPULATED_AREA_NOT_FCST_YN: str = parser.get("TOPIC", "populated_area_not_FCST_YN")
-PARK_NOT_FCST_YN: str = parser.get("TOPIC", "park_not_FCST_YN")
-PALACE_AND_CULTURAL_HERITAGE_NOT_FCST_YN: str = parser.get(
-    "TOPIC", "palace_and_cultural_heritage_not_FCST_YN"
+# # TOPIC
+# DEVELOPED_MARKET_NOT_FCST: str = parser.get("TOPIC", "developed_market_not_FCST")
+# POPULATED_AREA_NOT_FCST: str = parser.get("TOPIC", "populated_area_not_FCST")
+# PARK_NOT_FCST: str = parser.get("TOPIC", "park_not_FCST")
+# PALACE_AND_CULTURAL_HERITAGE_NOT_FCST: str = parser.get(
+#     "TOPIC", "palace_and_cultural_heritage_not_FCST"
+# )
+# TOURIST_SPECIAL_ZONE_NOT_FCST: str = parser.get(
+#     "TOPIC", "tourist_special_zone_not_FCST"
+# )
+
+# AGE TOPIC
+PALACE_AND_CULTURAL_HERITAGE_AGE: str = parser.get(
+    "AGETOPIC", "palace_and_cultural_heritage_AGE"
 )
-TOURIST_SPECIAL_ZONE_NOT_FCST_YN: str = parser.get(
-    "TOPIC", "tourist_special_zone_not_FCST_YN"
+TOURIST_SPECIAL_ZONE_AGE: str = parser.get("AGETOPIC", "tourist_special_zone_AGE")
+DEVELOPED_MARKET_AGE: str = parser.get("AGETOPIC", "developed_market_AGE")
+POPULATED_AREA_AGE: str = parser.get("AGETOPIC", "populated_area_AGE")
+PARK_AGE: str = parser.get("AGETOPIC", "park_AGE")
+
+PARK_NOT_FCST_AGE: str = parser.get("AGETOPIC", "park_not_FCST_AGE")
+DEVELOPED_MARKET_NOT_FCST_AGE: str = parser.get(
+    "AGETOPIC", "developed_market_not_FCST_AGE"
 )
+POPULATED_AREA_NOT_FCST_AGE: str = parser.get("AGETOPIC", "populated_area_not_FCST_AGE")
+PALACE_AND_CULTURAL_HERITAGE_NOT_FCST_AGE: str = parser.get(
+    "AGETOPIC", "palace_and_cultural_heritage_not_FCST_AGE"
+)
+TOURIST_SPECIAL_ZONE_NOT_FCST_AGE: str = parser.get(
+    "AGETOPIC", "tourist_special_zone_not_FCST_AGE"
+)
+# ------------------------------------------------------------------------------
+
+# GENDER TOPIC
+PALACE_AND_CULTURAL_HERITAGE_GENDER: str = parser.get(
+    "GENDERTOPIC", "palace_and_cultural_heritage_GENDER"
+)
+TOURIST_SPECIAL_ZONE_GENDER: str = parser.get(
+    "GENDERTOPIC", "tourist_special_zone_GENDER"
+)
+DEVELOPED_MARKET_GENDER: str = parser.get("GENDERTOPIC", "developed_market_GENDER")
+POPULATED_AREA_GENDER: str = parser.get("GENDERTOPIC", "populated_area_GENDER")
+PARK_GENDER: str = parser.get("GENDERTOPIC", "park_GENDER")
+
+PARK_NOT_FCST_GENDER: str = parser.get("GENDERTOPIC", "park_not_FCST_GENDER")
+DEVELOPED_MARKET_NOT_FCST_GENDER: str = parser.get(
+    "GENDERTOPIC", "developed_market_not_FCST_GENDER"
+)
+POPULATED_AREA_NOT_FCST_GENDER: str = parser.get(
+    "GENDERTOPIC", "populated_area_not_FCST_GENDER"
+)
+PALACE_AND_CULTURAL_HERITAGE_NOT_FCST_GENDER: str = parser.get(
+    "GENDERTOPIC", "palace_and_cultural_heritage_not_FCST_GENDER"
+)
+TOURIST_SPECIAL_ZONE_NOT_FCST_GENDER: str = parser.get(
+    "GENDERTOPIC", "tourist_special_zone_not_FCST_GENDER"
+)
+# ------------------------------------------------------------------------------
 
 
 # 메모리 계산
@@ -78,7 +126,7 @@ def lowercase_keys(obj):
         "area_congestion_msg": "사람이 몰려있을 수 있지만 크게 붐비지는 않아요. 도보 이동에 큰 제약이 없어요.",
         "area_ppltn_min": 30000,
         "area_ppltn_max": 32000,
-        "fcst_yn": "N",
+        "fcst": "N",
         "age_congestion_specific": {
             "ppltn_rate_0": 0.3,
             "ppltn_rate_10": 5.7,
@@ -95,5 +143,5 @@ def lowercase_keys(obj):
     if isinstance(obj, list):
         return [lowercase_keys(data) for data in obj]
     if isinstance(obj, dict):
-        return {k.lower: lowercase_keys(v) for k, v in obj.items()}
+        return {k.lower(): lowercase_keys(v) for k, v in obj.items()}
     return obj

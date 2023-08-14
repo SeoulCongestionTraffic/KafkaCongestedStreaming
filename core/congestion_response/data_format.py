@@ -1,5 +1,9 @@
 """
-필요한 데이터스키마 나누기
+------------------------------------------------------
+|                                                    |   
+| -- Seoul Age and Gender Congestion rate extract -- |
+|                                                    |
+------------------------------------------------------
 """
 from __future__ import annotations
 
@@ -16,7 +20,7 @@ class BasePopulationRate(BaseModel):
     area_congestion_msg: str
     area_ppltn_min: int
     area_ppltn_max: int
-    fcst_yn: str
+    fcst_yn: dict | str
 
     @staticmethod
     def _predict_yn(data: dict[str, str]) -> dict | str:
@@ -37,6 +41,21 @@ class BasePopulationRate(BaseModel):
 
     @staticmethod
     def _rate_ppltn_extract(data: dict[str, str], keyword: str) -> dict[str, float]:
+        """키워드에 따라서 데이터 추출
+
+        Args:
+            - data (dict[str, str]): 혼잡도 API
+            - keyword (str): 추출할 키워드
+
+        Returns:
+            dict[str, float]:
+            >>> {
+            "ppltn_rate_0": 0.3,
+            "ppltn_rate_10": 5.7,
+            "ppltn_rate_20": 26.9,
+            ...
+            }
+        """
         return {
             key.lower(): float(value) for key, value in data.items() if keyword in key
         }
@@ -63,10 +82,11 @@ class BasePopulationRate(BaseModel):
                 area_ppltn_min=int(data["AREA_PPLTN_MIN"]),
                 area_ppltn_max=int(data["AREA_PPLTN_MAX"]),
                 **{rate_key: cls._rate_ppltn_extract(data=data, keyword=keyword)},
-                fcst_yn=cls._predict_yn(data=data["FCST_YN"]),
-            )
+                fcst_yn=cls._predict_yn(data=data),
+            ).model_dump()
         except ValidationError as error:
             logging.error("schem extract error --> %s", error)
+            return None
 
 
 # ------------------------------------------------------------------------------------------------------------#

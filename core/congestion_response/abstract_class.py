@@ -1,7 +1,7 @@
 """
 추상화 집단
 """
-
+from typing import Any
 from abc import ABC, abstractmethod
 from core.setting.create_log import SocketLogCustomer
 
@@ -91,7 +91,9 @@ class AbstractSeoulDataSending(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    async def async_data_sending(self, category: str, location: str):
+    async def data_normalization(
+        self, category: str, location: str, rate_type: str
+    ) -> None:
         """
         인구 혼잡도 kafka 연결
         - category: 지역
@@ -100,8 +102,43 @@ class AbstractSeoulDataSending(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    async def async_popular_congestion(self):
+    async def async_data_sending(
+        self, congest: dict[str, Any], category: str, location: str, rate_type: str
+    ) -> None:
+        """데이터 전송 로직
+
+        Args:
+            - congest (dict[str, Any]): 혼잡도 데이터
+            - category (str): 지역
+            - location (str): 장소
+            - rate_type (str): 혼잡도 타입
+
+        Raises:
+            NotImplementedError: _description_
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def async_popular_congestion(self, rate_type: str) -> None:
         """
         인구 혼잡도 kafka 연결
+        """
+        raise NotImplementedError()
+
+
+class AbstractDataTransforFactor(ABC):
+    """
+    Abstuact class for seoul place kafka data factor
+    """
+
+    @abstractmethod
+    def transform(self, data: dict[str, Any]) -> dict[str, Any]:
+        """데이터 변환
+        Args:
+            data (dict[str, Any]):
+                - 서울시 도시 데이터\n
+        Returns:
+            dict[str, Any]:
+                - 변형된 스키마
         """
         raise NotImplementedError()
