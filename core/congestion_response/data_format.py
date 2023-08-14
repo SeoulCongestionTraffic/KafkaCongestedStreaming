@@ -29,7 +29,7 @@ def get_congestion_value(input_string: str) -> int:
     try:
         return CongestionLevel[input_string].value
     except KeyError:
-        return None  # 혹은 필요에 따라 다른 처리를 할 수 있습니다.
+        return 2
 
 
 class BasePopulationRate(BaseModel):
