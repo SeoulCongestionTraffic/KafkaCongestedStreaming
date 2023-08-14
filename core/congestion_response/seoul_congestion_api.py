@@ -77,7 +77,7 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
                     )
                 case "N":
                     await produce_sending(
-                        topic=f"{category}_not_FCST_YN_{rate_type}",
+                        topic=f"{category}_not_FCST_{rate_type}",
                         message=rate_schema,
                         key=location,
                     )
