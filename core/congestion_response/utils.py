@@ -4,6 +4,7 @@
 
 from pathlib import Path
 
+import asyncio
 import aiohttp
 import xmltodict
 import pandas as pd
@@ -47,6 +48,7 @@ class AsyncResponseDataFactory(AbstractAsyncResponseDataFactory):
         """
         async with aiohttp.ClientSession() as session:
             response = await session.get(url)
+            await asyncio.sleep(1)
             match response.status:
                 case 200:
                     return await self._xml_to_dict_convert(await response.text())

@@ -1,7 +1,6 @@
 """
 async congestion
 """
-import asyncio
 import tracemalloc
 from typing import Any, Union, Type
 
@@ -75,12 +74,20 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
                         message=rate_schema,
                         key=location,
                     )
+                    await self.logging.data_log(
+                        location=f"{category}_{rate_type}", message=rate_schema
+                    )
+
                 case "N":
                     await produce_sending(
                         topic=f"{category}_not_FCST_{rate_type}",
                         message=rate_schema,
                         key=location,
                     )
+                    await self.logging.data_log(
+                        location=f"{category}_not_FCST_{rate_type}", message=rate_schema
+                    )
+
         except KafkaConnectionError as error:
             self.logging.error_log(
                 error_type="kafka_connection", message=f"Kafk 데이터 전송 실패 --> {error}"
@@ -99,7 +106,6 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
             await self.async_data_sending(
                 congest=congest, category=category, location=data, rate_type=rate_type
             )
-            await self.logging.data_log(location=category, message=congest)
 
     async def async_popular_congestion(self, rate_type: str) -> None:
         """혼잡도 데이터를 기반으로 적절한 토픽에 데이터를 전송
@@ -112,7 +118,6 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
         """
         create_topic()
         while True:
-            await asyncio.sleep(5)
             try:
                 for category, location in seoul_place().items():
                     await self.data_normalization(

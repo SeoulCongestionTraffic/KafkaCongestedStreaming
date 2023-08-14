@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import logging
 from pydantic import BaseModel, ValidationError
-from core.setting.properties import lowercase_keys
+from core.setting.properties import transform_data
 
 
 class BasePopulationRate(BaseModel):
@@ -35,7 +35,7 @@ class BasePopulationRate(BaseModel):
         """
         match data["FCST_YN"]:
             case "Y":
-                return lowercase_keys(data["FCST_PPLTN"])
+                return transform_data(data["FCST_PPLTN"])
             case "N":
                 return "N"
 

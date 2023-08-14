@@ -18,6 +18,7 @@ URL: str = parser.get("API", "url")
 BOOTSTRAP_SERVER: str = parser.get("KAFKA", "bootstrap_servers")
 SECURITY_PROTOCOL: str = parser.get("KAFKA", "security_protocol")
 MAX_BATCH_SIZE: int = parser.get("KAFKA", "max_batch_size")
+MAX_REQUEST_SIZE: int = parser.get("KAFKA", "max_request_size")
 ARCKS: str = parser.get("KAFKA", "acks")
 
 # # TOPIC
@@ -112,7 +113,7 @@ def deep_getsizeof(obj, seen=None) -> int:
 
 
 # 대문자 소문자 변환
-def lowercase_keys(obj):
+def transform_data(obj):
     """
     대문자를 소문자로 재귀호출
 
@@ -141,7 +142,13 @@ def lowercase_keys(obj):
 
     """
     if isinstance(obj, list):
-        return [lowercase_keys(data) for data in obj]
+        return [transform_data(data) for data in obj]
     if isinstance(obj, dict):
-        return {k.lower(): lowercase_keys(v) for k, v in obj.items()}
+        new_obj = {k.lower(): transform_data(v) for k, v in obj.items()}
+        # fcst_ppltn_min 및 fcst_ppltn_max의 값을 실수로 변환
+        if "fcst_ppltn_min" in new_obj:
+            new_obj["fcst_ppltn_min"] = float(new_obj["fcst_ppltn_min"])
+        if "fcst_ppltn_max" in new_obj:
+            new_obj["fcst_ppltn_max"] = float(new_obj["fcst_ppltn_max"])
+        return new_obj
     return obj

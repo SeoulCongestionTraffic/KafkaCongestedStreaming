@@ -1,7 +1,6 @@
 """
 KAFAK PRODUCE 
 """
-import sys
 import json
 from typing import Any
 from pathlib import Path
@@ -19,7 +18,9 @@ from core.setting.properties import (
     BOOTSTRAP_SERVER,
     SECURITY_PROTOCOL,
     MAX_BATCH_SIZE,
+    MAX_REQUEST_SIZE,
     ARCKS,
+    deep_getsizeof,
 )
 
 present_path = Path(__file__).parent.parent
@@ -40,9 +41,11 @@ async def produce_sending(topic: Any, message: Any, key: Any = None):
         "bootstrap_servers": f"{BOOTSTRAP_SERVER}",
         "security_protocol": f"{SECURITY_PROTOCOL}",
         "max_batch_size": int(f"{MAX_BATCH_SIZE}"),
+        "max_request_size": int(f"{MAX_REQUEST_SIZE}"),
         "acks": f"{ARCKS}",
         "key_serializer": lambda key: key.encode("utf-8"),
         "value_serializer": lambda value: json.dumps(value).encode("utf-8"),
+        "retry_backoff_ms": 100,
     }
     producer = AIOKafkaProducer(**config)
 
@@ -52,7 +55,7 @@ async def produce_sending(topic: Any, message: Any, key: Any = None):
 
     try:
         await producer.send_and_wait(topic=topic, value=message, key=key)
-        size: int = sys.getsizeof(message)
+        size: int = deep_getsizeof(message)
         logging.info(
             "Message delivered to: %s --> counting --> %s size --> %s",
             topic,
