@@ -12,13 +12,8 @@ import xmltodict
 import pandas as pd
 from requests.exceptions import RequestException
 
-from core.congestion_response.abstract_class import (
-    AbstractAsyncResponseDataFactory,
-    AbstractPlaceLocationClassifier,
-)
 
-
-class AsyncResponseDataFactory(AbstractAsyncResponseDataFactory):
+class AsyncResponseDataFactory:
     """
     Response Factory
     """
@@ -58,7 +53,7 @@ class AsyncResponseDataFactory(AbstractAsyncResponseDataFactory):
                     raise RequestException(f"API 호출의 에러가 일어났습니다 --> {response.status}")
 
 
-class SeoulPlaceClassifier(AbstractPlaceLocationClassifier):
+class SeoulPlaceClassifier:
     """
     카테고리 <---> 지역 매칭
     확장성 고려
