@@ -1,7 +1,7 @@
 """
 유틸 모음집
 """
-
+from enum import Enum
 from pathlib import Path
 from datetime import datetime
 
@@ -100,6 +100,25 @@ def seoul_place() -> dict[str, list[str]]:
     return SeoulPlaceClassifier().place_classfier()
 
 
+class CongestionLevel(Enum):
+    """혼잡도 레벨 지정"""
+
+    여유 = 0
+    보통 = 1
+    약간 = 2
+    붐빔 = 3
+
+
+def get_congestion_value(input_string: str) -> int:
+    """혼잡도 레벨필터링"""
+    if "약간" in input_string:
+        return CongestionLevel.약간.value
+    try:
+        return CongestionLevel[input_string].value
+    except KeyError:
+        return 2
+
+
 def utc_time(location_time: str) -> float:
     """utc time float transfor"""
     # 문자열을 datetime 객체로 변환
@@ -141,13 +160,19 @@ def transform_data(obj):
     if isinstance(obj, list):
         return [transform_data(data) for data in obj]
     if isinstance(obj, dict):
-        new_obj = {k.lower(): transform_data(v) for k, v in obj.items()}
-        # fcst_ppltn_min 및 fcst_ppltn_max의 값을 실수로 변환
-        if "fcst_ppltn_min" in new_obj:
-            new_obj["fcst_ppltn_min"] = float(new_obj["fcst_ppltn_min"])
-        if "fcst_ppltn_max" in new_obj:
-            new_obj["fcst_ppltn_max"] = float(new_obj["fcst_ppltn_max"])
-        if "fcst_time" in new_obj:
-            new_obj["fcst_time"] = utc_time(new_obj["fcst_time"])
-        return new_obj
+        return _extracted_from_transform_data_32(obj, transform_data)
     return obj
+
+
+def _extracted_from_transform_data_32(obj, transform_data):
+    new_obj = {k.lower(): transform_data(v) for k, v in obj.items()}
+    # fcst_ppltn_min 및 fcst_ppltn_max의 값을 실수로 변환
+    if "fcst_ppltn_min" in new_obj:
+        new_obj["fcst_ppltn_min"] = float(new_obj["fcst_ppltn_min"])
+    if "fcst_ppltn_max" in new_obj:
+        new_obj["fcst_ppltn_max"] = float(new_obj["fcst_ppltn_max"])
+    if "fcst_time" in new_obj:
+        new_obj["fcst_time"] = utc_time(new_obj["fcst_time"])
+    if "fcst_congest_lvl" in new_obj:
+        new_obj["fcst_congest_lvl"] = get_congestion_value(new_obj["fcst_congest_lvl"])
+    return new_obj
