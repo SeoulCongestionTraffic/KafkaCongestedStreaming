@@ -58,34 +58,45 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
         self, congest: dict[str, Any], category: str, location: str, rate_type: str
     ) -> None:
         """데이터 전송 로직
-
         Args:
             - congest (dict[str, Any]): 혼잡도 데이터
             - category (str): 지역
             - location (str): 장소
             - rate_type (str): 혼잡도 타입
         """
+        # 토픽명 변환 로직
+        topic_transform = {
+            "developed_market": "devMkt",
+            "palace_and_cultural_heritage": "palCult",
+            "park": "park",
+            "populated_area": "popArea",
+            "tourist_special_zone": "tourZone",
+        }
+
+        transformed_category = topic_transform.get(category, category)
         rate_schema: dict = self._strategy.transform(congest)
         try:
             match congest["FCST_YN"]:
                 case "Y":
                     await produce_sending(
-                        topic=f"{category}_{rate_type}",
+                        topic=f"{transformed_category}_{rate_type}",
                         message=rate_schema,
                         key=location,
                     )
                     await self.logging.data_log(
-                        location=f"{category}_{rate_type}", message=rate_schema
+                        location=f"{transformed_category}_{rate_type}",
+                        message=rate_schema,
                     )
 
                 case "N":
                     await produce_sending(
-                        topic=f"{category}_not_FCST_{rate_type}",
+                        topic=f"{transformed_category}_noF_{rate_type}",
                         message=rate_schema,
                         key=location,
                     )
                     await self.logging.data_log(
-                        location=f"{category}_not_FCST_{rate_type}", message=rate_schema
+                        location=f"{transformed_category}_noF_{rate_type}",
+                        message=rate_schema,
                     )
 
         except KafkaConnectionError as error:
