@@ -4,6 +4,8 @@
 from enum import Enum
 from pathlib import Path
 from datetime import datetime
+from typing import Any, Union
+from abc import abstractmethod
 
 import time
 import asyncio
@@ -11,6 +13,8 @@ import aiohttp
 import xmltodict
 import pandas as pd
 from requests.exceptions import RequestException
+from core.setting.create_log import SocketLogCustomer
+from core.setting.properties import API_KEY, URL
 
 
 class AsyncResponseDataFactory:
@@ -91,6 +95,64 @@ class SeoulPlaceClassifier:
             self._get_english_category(category): data["AREA_NM"].to_list()
             for category, data in place_data.groupby("CATEGORY")
         }
+
+
+class DataTransforFactor:
+    """
+    Abstuact class for seoul place kafka data factor
+    """
+
+    def __init__(self) -> None:
+        self.logging = SocketLogCustomer()
+
+    async def async_congestion_response(
+        self, location: str, city_type: str = "citydata_ppltn"
+    ) -> dict[str, Union[str, dict[str, list[str]]]]:
+        """
+        주어진 위치에 대한 혼잡도 정보를 비동기로 요청
+
+        매개변수:
+            location (str): 혼잡도 정보를 요청할 지역의 이름.
+            city_type (str, optional): 도시 데이터 타입. 기본값은 "citydata_ppltn".
+
+        반환값:
+            dict[str, Union[str, dict[str, list[str, str]]]: 지정된 위치의 혼잡도 정보.
+        """
+        try:
+            url = f"{URL}/{API_KEY}/xml/{city_type}/1/1000/{location}"
+            data: dict = await AsyncResponseDataFactory().create_response(url=url)
+            return data["Map"]["SeoulRtd.citydata_ppltn"]
+        except RequestException as error:
+            self.logging.error_log(
+                error_type="connection_error", message=f"데이터 요청 중 오류 발생: {error}"
+            )
+            return {}
+
+    async def data_normalization(
+        self, category: str, location: str, rate_type: str
+    ) -> None:
+        """
+        인구 혼잡도 kafka 연결
+        - category: 지역
+        - location: 장소
+        """
+        for data in location:
+            congest = await self.async_congestion_response(data)
+            await self.async_data_sending(
+                congest=congest, category=category, location=data, rate_type=rate_type
+            )
+
+    @abstractmethod
+    def transform(self, data: dict[str, Any]) -> dict[str, Any]:
+        """데이터 변환
+        Args:
+            data (dict[str, Any]):
+                - 서울시 도시 데이터\n
+        Returns:
+            dict[str, Any]:
+                - 변형된 스키마
+        """
+        raise NotImplementedError()
 
 
 def seoul_place() -> dict[str, list[str]]:
