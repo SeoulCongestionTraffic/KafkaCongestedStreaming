@@ -1,9 +1,13 @@
 """
 API에 필요한것들
 """
+import time
 import sys
 import configparser
+from enum import Enum
 from pathlib import Path
+from typing import Any
+from datetime import datetime
 
 
 path = Path(__file__).parent.parent
@@ -86,6 +90,15 @@ AVG_TOURZONE_NOF_GEN: str = parser.get("AVEGENDERTOPIC", "avg_tourZone_noF_GEN")
 # ------------------------------------------------------------------------------
 
 
+"""
+-------------------------
+|                       |   
+| -- Seoul Properties-- |
+|                       |
+-------------------------
+"""
+
+
 # 메모리 계산
 def deep_getsizeof(obj, seen=None) -> int:
     """재귀적으로 객체의 메모리 사용량을 계산하는 함수"""
@@ -108,3 +121,76 @@ def deep_getsizeof(obj, seen=None) -> int:
         size += sum(deep_getsizeof(i, seen) for i in obj)
 
     return size
+
+
+class CongestionLevel(Enum):
+    """혼잡도 레벨 지정"""
+
+    여유 = 0
+    보통 = 1
+    약간 = 2
+    붐빔 = 3
+
+
+def get_congestion_value(input_string: str) -> int:
+    """혼잡도 레벨필터링"""
+    if "약간" in input_string:
+        return CongestionLevel.약간.value
+    try:
+        return CongestionLevel[input_string].value
+    except KeyError:
+        return 2
+
+
+def utc_time(location_time: str) -> float:
+    """utc time float transfor"""
+    # 문자열을 datetime 객체로 변환
+    date_time = datetime.strptime(location_time, "%Y-%m-%d %H:%M")
+
+    # datetime 객체를 유닉스 타임스탬프로 변환
+    return time.mktime(date_time.timetuple())
+
+
+# 대문자 소문자 변환
+def transform_data(obj) -> list | dict | Any:
+    """
+    대문자를 소문자로 재귀호출
+
+    parameter
+        - obj: dict or list comfact\n
+
+    return:
+    >>> {
+        "area_name": "가로수길",
+        "area_congestion_lvl": "보통",
+        "area_congestion_msg": "사람이 몰려있을 수 있지만 크게 붐비지는 않아요. 도보 이동에 큰 제약이 없어요.",
+        "area_ppltn_min": 30000,
+        "area_ppltn_max": 32000,
+        "fcst": "N",
+        "age_congestion_specific": {
+            "ppltn_rate_0": 0.3,
+            "ppltn_rate_10": 5.7,
+            ~~
+        },
+    }
+
+    """
+    if isinstance(obj, list):
+        return [transform_data(data) for data in obj]
+    if isinstance(obj, dict):
+        return _extracted_from_transform_data_32(obj, transform_data)
+    return obj
+
+
+def _extracted_from_transform_data_32(obj, transform_data) -> dict:
+    new_obj = {k.lower(): transform_data(v) for k, v in obj.items()}
+    # fcst_ppltn_min 및 fcst_ppltn_max의 값을 실수로 변환
+    if "fcst_ppltn_min" in new_obj:
+        new_obj["fcst_ppltn_min"] = float(new_obj["fcst_ppltn_min"])
+    if "fcst_ppltn_max" in new_obj:
+        new_obj["fcst_ppltn_max"] = float(new_obj["fcst_ppltn_max"])
+    if "fcst_time" in new_obj:
+        new_obj["fcst_time"] = utc_time(new_obj["fcst_time"])
+    if "fcst_congest_lvl" in new_obj:
+        new_obj["fcst_congest_lvl"] = get_congestion_value(new_obj["fcst_congest_lvl"])
+    return new_obj

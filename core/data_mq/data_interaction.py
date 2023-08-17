@@ -12,7 +12,6 @@ from aiokafka.errors import (
     BrokerNotAvailableError,
     KafkaProtocolError,
 )
-import sys
 from core.setting.create_log import log
 from core.setting.properties import (
     BOOTSTRAP_SERVER,
