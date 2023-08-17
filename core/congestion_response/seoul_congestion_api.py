@@ -32,16 +32,6 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
         super().__init__()
         self._strategy = strategy
 
-    async def async_data_classification(
-        self, category: str, congestions: dict[str, dict[str, Any]]
-    ) -> dict[str, dict[str, Any]]:
-        merge_data = {}
-        if congestions[category]["fcst_yn"] == "N" and congestions[category].get(
-            "gender_rate"
-        ):
-            merge_data.update(congestions)
-        print(merge_data)
-
     async def async_data_sending(
         self, congest: dict[str, Any], category: str, location: str, rate_type: str
     ) -> None:
@@ -63,6 +53,7 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
 
         transformed_category = topic_transform.get(category, category)
         rate_schema: dict = self._strategy.transform(congest)
+
         # try:
         #     match congest["FCST_YN"]:
         #         case "Y":
