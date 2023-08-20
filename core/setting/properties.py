@@ -146,7 +146,6 @@ def utc_time(location_time: str) -> float:
     """utc time float transfor"""
     # 문자열을 datetime 객체로 변환
     date_time = datetime.strptime(location_time, "%Y-%m-%d %H:%M")
-
     # datetime 객체를 유닉스 타임스탬프로 변환
     return time.mktime(date_time.timetuple())
 

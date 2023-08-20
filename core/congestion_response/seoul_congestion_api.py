@@ -64,7 +64,9 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
                     )
                     await self.logging.data_log(
                         location=f"{transformed_category}_{rate_type}",
+                        rate_type=rate_type,
                         message=rate_schema,
+                        noF=False,
                     )
 
                 case "N":
@@ -75,7 +77,9 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
                     )
                     await self.logging.data_log(
                         location=f"{transformed_category}_noF_{rate_type}",
+                        rate_type=rate_type,
                         message=rate_schema,
+                        noF=True,
                     )
 
         except KafkaConnectionError as error:
