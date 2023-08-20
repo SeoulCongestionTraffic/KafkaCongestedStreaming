@@ -12,7 +12,7 @@ class AbstractDataTransfore(ABC):
     """
 
     @abstractmethod
-    def transform(self, data: dict[str, Any]) -> dict[str, Any]:
+    def transform(self, category: str, data: dict[str, Any]) -> dict[str, Any]:
         """데이터 변환
         Args:
             data (dict[str, Any]):

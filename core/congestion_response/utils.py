@@ -79,7 +79,7 @@ class AsyncResponseDataFactory:
             data: dict = await self._create_response(url=url)
             return data["Map"]["SeoulRtd.citydata_ppltn"]
         except Exception as error:
-            self._logging.error_log(
+            await self._logging.error_log(
                 error_type="connection_error", message=f"데이터 요청 중 오류 발생: {error}"
             )
             return {}
