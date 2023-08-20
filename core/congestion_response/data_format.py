@@ -6,10 +6,11 @@
 ------------------------------------------------------
 """
 from __future__ import annotations
+from typing import Any
 
 import logging
 from pydantic import BaseModel, ValidationError
-from core.congestion_response.utils import (
+from core.setting.properties import (
     transform_data,
     utc_time,
     get_congestion_value,
@@ -114,7 +115,7 @@ class AgeCongestionSpecific(BaseModel):
 class TotalAgeRateComposition(BasePopulationRate):
     """각 나이대별 혼잡도 스키마 만들기"""
 
-    age_congestion_specific: AgeCongestionSpecific
+    age_rate: AgeCongestionSpecific
 
     @classmethod
     def schema_modify(cls, data: dict[str, str]) -> BasePopulationRate:
@@ -124,30 +125,26 @@ class TotalAgeRateComposition(BasePopulationRate):
 
         Returns:
         >>> {
-            "area_name": "가로수길",
-            "area_congestion_lvl": "보통",
-            "area_congestion_msg": "사람이 몰려있을 수 있지만 크게 붐비지는 않아요. 도보 이동에 큰 제약이 없어요.",
-            "area_ppltn_min": 30000,
-            "area_ppltn_max": 32000,
-            "fcst_yn":{
-                "fcst_ppltn: [
-                    ~~
-                ]
-            },
-            or "fcst_yn": "N"
-            "age_congestion_specific": {
-                "ppltn_rate_0": 0.3,
-                "ppltn_rate_10": 5.7,
-                "ppltn_rate_20": 26.9,
-                "ppltn_rate_30": 26.4,
-                "ppltn_rate_40": 18.9,
-                "ppltn_rate_50": 11.7,
-                "ppltn_rate_60": 6.3,
-                "ppltn_rate_70": 3.7,
-            },
+                "area_name": "가로수길",
+                "area_congestion_lvl": "보통",
+                "area_congestion_msg": "사람이 몰려있을 수 있지만 크게 붐비지는 않아요. 도보 이동에 큰 제약이 없어요.",
+                "area_ppltn_min": 30000,
+                "area_ppltn_max": 32000,
+                "fcst_yn":{
+                    "fcst_ppltn: [
+                        ~~
+                    ]
+                },
+                or "fcst_yn": "N"
+                "age_rate": {
+                    "ppltn_rate_0": 0.3,
+                    "ppltn_rate_10": 5.7,
+                    "ppltn_rate_20": 26.9,
+                    ~~~
+                }
             }
         """
-        return super().schmea_extract(data, "age_congestion_specific", "PPLTN_RATE_")
+        return super().schmea_extract(data, "age_rate", "PPLTN_RATE_")
 
 
 # ------------------------------------------------------------------------------------------------------------#
@@ -174,21 +171,22 @@ class AreaGenderRateSpecific(BasePopulationRate):
             - keyword (str): 추출할 키워드\n
         Returns:
         >>> {
-            "area_name": "가로수길",
-            "area_congestion_lvl": "보통",
-            "area_congestion_msg": "사람이 몰려있을 수 있지만 크게 붐비지는 않아요. 도보 이동에 큰 제약이 없어요.",
-            "area_ppltn_min": 30000,
-            "area_ppltn_max": 32000,
-            "fcst_yn":{
-                "fcst_ppltn: [
-                    ~~
-                ]
-            },
-            or "fcst_yn": "N"
-            "gender_rate": {
-                "male_ppltn_rate": 44.2,
-                "female_ppltn_rate": 55.8
-            },
-        }
+                "area_name": "가로수길",
+                "area_congestion_lvl": "보통",
+                "area_congestion_msg": "사람이 몰려있을 수 있지만 크게 붐비지는 않아요. 도보 이동에 큰 제약이 없어요.",
+                "area_ppltn_min": 30000,
+                "area_ppltn_max": 32000,
+                "fcst_yn":{
+                    "fcst_ppltn: [
+                        ~~
+                    ]
+                },
+                or "fcst_yn": "N"
+                "gender_rate": {
+                    "male_ppltn_rate": 44.2,
+                    "female_ppltn_rate": 55.8
+                },
+
+            }
         """
         return super().schmea_extract(data, "gender_rate", "E_PPLTN_RATE")
