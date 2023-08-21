@@ -23,7 +23,6 @@ from core.congestion_response.data_format import (
 
 
 tracemalloc.start()
-merged_dict = {}
 
 
 class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):

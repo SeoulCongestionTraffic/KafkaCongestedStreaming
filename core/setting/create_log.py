@@ -130,10 +130,7 @@ class SocketLogCustomer:
         - rate_type: 혼잡도 타입 (AGE or GENDER).
         - noF: FCST_YN 플래그, 예보가 포함되어 있지 않은 경우 True.
         """
-        if rate_type and noF is not None:
-            logger = self.create_logger(log_name, log_type, rate_type, noF)
-        else:
-            logger = self.create_logger(log_name, log_type)
+        logger = self.create_logger(log_name, log_type, rate_type, noF)
         log_func = getattr(logger, level, "info")
         log_func(message)
 
