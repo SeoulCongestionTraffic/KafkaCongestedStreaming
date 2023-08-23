@@ -3,8 +3,7 @@
 ## 서울 시 실시간 인구혼잡도 평균 계산 작성
 
 ### architecture 
-<img width="1190" alt="image" src="https://github.com/SeoulCongestionTraffic/SeoulCongestedStreaming/assets/52487610/7ca04d12-084f-4c47-b6f8-1d9680ca2811">
-
+<img width="500" alt="image" src="https://github.com/SeoulCongestionTraffic/KafkaCongestedStreaming/assets/52487610/659d1b57-3e28-42dc-8ca0-2f5c0097c9da">
 
 ### 서울시 도시혼잡도 URL 
 - https://data.seoul.go.kr/SeoulRtd/
@@ -43,9 +42,6 @@
 | 27  | FCST_PPLTN_MAX         | 예측 실시간 인구 지표 최대값              
 ```
 
-
-### 현재 진행중(스키마 정제중)
-- 인구별 혼잡도
 - 나이별 인구 비율
 - 해당 지역 인구 비율
 
