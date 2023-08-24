@@ -105,7 +105,7 @@ class SeoulPlaceClassifier:
 
         return category_mapping.get(korean_name, "unknown_topic")
 
-    def _place_classfier(self, filename="seoul_place.csv") -> dict[str, list[str]]:
+    def place_classfier(self, filename="seoul_place.csv") -> dict[str, list[str]]:
         """
         카테고리별 지역 반환
 
@@ -126,4 +126,4 @@ class SeoulPlaceClassifier:
         """
         카테고리별 지역 반환 (서울)
         """
-        return SeoulPlaceClassifier()._place_classfier()
+        return SeoulPlaceClassifier().place_classfier()

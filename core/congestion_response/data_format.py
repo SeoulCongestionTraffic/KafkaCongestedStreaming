@@ -6,7 +6,6 @@
 ------------------------------------------------------
 """
 from __future__ import annotations
-from typing import Any
 
 import logging
 from pydantic import BaseModel, ValidationError
@@ -20,6 +19,7 @@ from core.setting.properties import (
 class BasePopulationRate(BaseModel):
     """공통 스키마"""
 
+    category: str
     area_name: str
     ppltn_time: float
     area_congestion_lvl: int
@@ -68,7 +68,7 @@ class BasePopulationRate(BaseModel):
 
     @classmethod
     def schmea_extract(
-        cls, data: dict[str, str], rate_key: str, keyword: str
+        cls, category: str, data: dict[str, str], rate_key: str, keyword: str
     ) -> BasePopulationRate:
         """공통스키마
 
@@ -82,6 +82,7 @@ class BasePopulationRate(BaseModel):
         """
         try:
             return cls(
+                category=category,
                 area_name=data["AREA_NM"],
                 ppltn_time=utc_time(data["PPLTN_TIME"]),
                 area_congestion_lvl=get_congestion_value(data["AREA_CONGEST_LVL"]),
@@ -118,7 +119,7 @@ class TotalAgeRateComposition(BasePopulationRate):
     age_rate: AgeCongestionSpecific
 
     @classmethod
-    def schema_modify(cls, data: dict[str, str]) -> BasePopulationRate:
+    def schema_modify(cls, category: str, data: dict[str, str]) -> BasePopulationRate:
         """
         Args:
             - data (dict[str, str]): 서울시 도시 실시간 인구 혼잡도 API
@@ -144,7 +145,7 @@ class TotalAgeRateComposition(BasePopulationRate):
                 }
             }
         """
-        return super().schmea_extract(data, "age_rate", "PPLTN_RATE_")
+        return super().schmea_extract(category, data, "age_rate", "PPLTN_RATE_")
 
 
 # ------------------------------------------------------------------------------------------------------------#
@@ -163,7 +164,7 @@ class AreaGenderRateSpecific(BasePopulationRate):
     gender_rate: AreaGenderRate
 
     @classmethod
-    def schema_modify(cls, data: dict[str, str]) -> BasePopulationRate:
+    def schema_modify(cls, category: str, data: dict[str, str]) -> BasePopulationRate:
         """
         Args:
             - data (dict[str, str]): 서울시 도시 실시간 인구 혼잡도 API
@@ -189,4 +190,4 @@ class AreaGenderRateSpecific(BasePopulationRate):
 
             }
         """
-        return super().schmea_extract(data, "gender_rate", "E_PPLTN_RATE")
+        return super().schmea_extract(category, data, "gender_rate", "E_PPLTN_RATE")

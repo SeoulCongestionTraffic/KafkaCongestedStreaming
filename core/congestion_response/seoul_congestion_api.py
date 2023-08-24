@@ -52,7 +52,7 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
         }
 
         transformed_category = topic_transform.get(category, category)
-        rate_schema: dict = self._strategy.transform(congest)
+        rate_schema: dict = self._strategy.transform(category, congest)
         try:
             match congest["FCST_YN"]:
                 case "Y":
@@ -117,12 +117,12 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
 class AgeCongestionRate(AbstractDataTransfore):
     """나이별 혼잡도 클래스"""
 
-    def transform(self, data: dict[str, Any]) -> dict[str, Any]:
-        return TRC.schema_modify(data)
+    def transform(self, category: str, data: dict[str, Any]) -> dict[str, Any]:
+        return TRC.schema_modify(category, data)
 
 
 class GenderCongestionRate(AbstractDataTransfore):
     """성별 혼잡도 클래스"""
 
-    def transform(self, data: dict[str, Any]) -> dict[str, Any]:
-        return AGRS.schema_modify(data)
+    def transform(self, category: str, data: dict[str, Any]) -> dict[str, Any]:
+        return AGRS.schema_modify(category, data)
