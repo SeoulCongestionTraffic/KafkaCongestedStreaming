@@ -109,6 +109,33 @@ services:
     networks:
       - kafka-network
 
+  kafka-connect:
+    image: confluentinc/cp-kafka-connect:6.2.0
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: kafka1:19092,kafka2:29092,kafka3:39092
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: compose-connect-group
+      CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
+      CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
+      CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_PLUGIN_PATH: "/usr/share/java,/etc/kafka-connect/jars"
+      CONNECT_REST_ADVERTISED_HOST_NAME: 'kafka-connect'
+    volumes:
+      - /path/to/your/connect/s3/sink/properties/file:/etc/kafka-connect/s3-sink.properties
+      - /path/to/your/jars:/etc/kafka-connect/jars  # Optional: if you need external jars
+    ports:
+      - "8083:8083"
+    networks:
+      - kafka-network
+
   akhq:
     image: tchiotludo/akhq:latest
     hostname: akhq
@@ -127,56 +154,7 @@ services:
       - 8080:8080
     networks:
       - kafka-network
-  
-  # fluentd1:
-  #   extends:
-  #     service: fluentd1
-  #     file: fluentd-cluster.yml 
-  #   depends_on:
-  #     - kafka-1
-  #     - kafka-2
-  #     - kafka-3
-  #     - zookeeper-1
-  #     - zookeeper-2
-  #     - zookeeper-3
-
-  # fluentd2:
-  #   extends:
-  #     service: fluentd2
-  #     file: fluentd-cluster.yml 
-  #   depends_on:
-  #     - kafka-1
-  #     - kafka-2
-  #     - kafka-3
-  #     - zookeeper-1
-  #     - zookeeper-2
-  #     - zookeeper-3
-
-  # fluentd3:
-  #   extends:
-  #     service: fluentd3
-  #     file: fluentd-cluster.yml 
-  #   depends_on:
-  #     - kafka-1
-  #     - kafka-2
-  #     - kafka-3
-  #     - zookeeper-1
-  #     - zookeeper-2
-  #     - zookeeper-3
-  
-  # nginx:
-  #   extends:
-  #     service: nginx
-  #     file: fluentd-cluster.yml 
-  #   depends_on:
-  #     - kafka-1
-  #     - kafka-2
-  #     - kafka-3
-  #     - zookeeper-1
-  #     - zookeeper-2
-  #     - zookeeper-3
-
-
+      
 networks:
   kafka-network:
     external: true
