@@ -1,43 +1,104 @@
 import requests
 import json
-
-KAFKA_CONNECT_URL = "http://your-kafka-connect-url:8083"
-
-headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-}
-
-connector_config = {
-    "name": "s3-sink-connector",
-    "config": {
-        "connector.class": "io.confluent.connect.s3.S3SinkConnector",
-        "tasks.max": "1",
-        "topics": "YOUR_TOPIC_NAME",
-        "store.url": "s3://YOUR_BUCKET_NAME/log",
-        "flush.size": "300",
-        "format.class": "io.confluent.connect.s3.format.json.JsonFormat",
-        "partitioner.class": "io.confluent.connect.storage.partitioner.DefaultPartitioner",
-        "path.format": "'year'=YYYY/'month'=MM/'day'=dd",
-        "locale": "en-US",
-        "timezone": "UTC",
-        "transforms": "routeTS,insertSource",
-        "transforms.routeTS.type": "org.apache.kafka.connect.transforms.TimestampRouter",
-        "transforms.routeTS.timestamp.format": "yyyy-MM-dd HH:mm:ss",
-        "transforms.routeTS.topic.format": "${topic}/${timestamp}",
-        # S3 인증 정보
-        "s3.access.key": "YOUR_AWS_ACCESS_KEY",
-        "s3.secret.key": "YOUR_AWS_SECRET_KEY",
-        "s3.region": "YOUR_S3_REGION",  # 예: "us-west-1"
-    },
-}
-
-
-response = requests.post(
-    f"{KAFKA_CONNECT_URL}/connectors",
-    headers=headers,
-    data=json.dumps(connector_config),
-    timeout=10,
+from core.setting.properties import (
+    BOOTSTRAP_SERVER,
+)
+from core.setting.properties import (
+    DEVMKT_AGE,
+    PALCULT_AGE,
+    PARK_AGE,
+    POPAREA_AGE,
+    TOURZONE_AGE,
+    DEVMKT_NOF_AGE,
+    PALCULT_NOF_AGE,
+    PARK_NOF_AGE,
+    POPAREA_NOF_AGE,
+    TOURZONE_NOF_AGE,
 )
 
-print(response.json())
+from core.setting.properties import (
+    DEVMKT_NOF_GENDER,
+    PALCULT_NOF_GENDER,
+    PARK_NOF_GENDER,
+    POPAREA_NOF_GENDER,
+    TOURZONE_NOF_GENDER,
+    DEVMKT_GENDER,
+    PALCULT_GENDER,
+    PARK_GENDER,
+    POPAREA_GENDER,
+    TOURZONE_GENDER,
+)
+from core.setting.properties import (
+    AVG_AGE_TOPIC,
+    AVG_GENDER_TOPIC,
+    AVG_N_AGE_TOPIC,
+    AVG_N_GENDER_TOPIC,
+)
+
+
+def sink_connection():
+    topic = [
+        DEVMKT_AGE,
+        PALCULT_AGE,
+        PARK_AGE,
+        POPAREA_AGE,
+        TOURZONE_AGE,
+        DEVMKT_NOF_AGE,
+        PALCULT_NOF_AGE,
+        PARK_NOF_AGE,
+        POPAREA_NOF_AGE,
+        TOURZONE_NOF_AGE,
+        DEVMKT_GENDER,
+        PALCULT_GENDER,
+        PARK_GENDER,
+        POPAREA_GENDER,
+        TOURZONE_GENDER,
+        DEVMKT_NOF_GENDER,
+        PALCULT_NOF_GENDER,
+        PARK_NOF_GENDER,
+        POPAREA_NOF_GENDER,
+        TOURZONE_NOF_GENDER,
+        AVG_AGE_TOPIC,
+        AVG_GENDER_TOPIC,
+        AVG_N_AGE_TOPIC,
+        AVG_N_GENDER_TOPIC,
+    ]
+
+    KAFKA_CONNECT_URL = "http://localhost:8083"
+
+    headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+    }
+
+    connector_config = {
+        "name": "s3-sink-connector-region-seoul-injection-00107",
+        "config": {
+            "connector.class": "io.confluent.connect.s3.S3SinkConnector",
+            "tasks.max": "1",  # 병렬 처리를 위한 태스크 수
+            "topics": ",".join(topic),  # 콤마로 구분된 토픽 리스트
+            "s3.bucket.name": "de-06-01-sparkcheckpointinstruction",
+            "s3.region": "ap-northeast-2",
+            "flush.size": "100",  # S3에 쓰기 전에 버퍼에 쌓을 레코드 수
+            "storage.class": "io.confluent.connect.s3.storage.S3Storage",
+            "format.class": "io.confluent.connect.s3.format.json.JsonFormat",
+            "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+            "value.converter": "org.apache.kafka.connect.storage.StringConverter",
+            "partitioner.class": "io.confluent.connect.storage.partitioner.TimeBasedPartitioner",
+            "path.format": "'year'=YYYY/'month'=MM/'day'=dd",
+            "locale": "en-US",
+            "timezone": "UTC",
+            "schemas.enable": False,
+            "partition.duration.ms": 60000,
+            "bootstrap.servers": BOOTSTRAP_SERVER,
+        },
+    }
+
+    response = requests.post(
+        f"{KAFKA_CONNECT_URL}/connectors",
+        headers=headers,
+        data=json.dumps(connector_config),
+        timeout=10,
+    )
+
+    print(response.json())

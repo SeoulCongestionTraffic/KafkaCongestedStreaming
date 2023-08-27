@@ -63,7 +63,6 @@ AVG_GENDER_TOPIC: str = parser.get("AVGTOPIC", "avg_gender_topic")
 AVG_N_AGE_TOPIC: str = parser.get("AVGTOPIC", "avg_n_age_topic")
 AVG_N_GENDER_TOPIC: str = parser.get("AVGTOPIC", "avg_n_gender_topic")
 
-
 """
 -------------------------
 |                       |   
