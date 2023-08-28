@@ -38,7 +38,7 @@ def sink_connection(topics: list[str], name: str, tasks: str, typed: str):
             "partitioner.class": "io.confluent.connect.storage.partitioner.TimeBasedPartitioner",
             "path.format": "YYYY/MM/dd",
             "locale": "ko-KR",
-            "timezone": "UTC",
+            "timezone": "Asia/Seoul",
             "schemas.enable": False,  # 스키마를 활성화할지 여부
             "partition.duration.ms": 60000,
             "bootstrap.servers": BOOTSTRAP_SERVER,
