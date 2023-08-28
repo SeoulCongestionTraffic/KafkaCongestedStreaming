@@ -5,7 +5,6 @@ TEST
 if __name__ == "__main__":
     import asyncio
     from core.data_mq.topic_create import create_topic
-    from core.data_mq.s3_sink_connect import sink_connection
     from core.congestion_response.seoul_congestion_api import (
         AsyncSeoulCongestionDataSending as ADS,
     )
@@ -17,6 +16,7 @@ if __name__ == "__main__":
     async def main():
         try:
             create_topic()
+            from core.data_mq.s3_sink_connect import sink_connection
 
             task = [
                 asyncio.create_task(
