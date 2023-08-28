@@ -5,16 +5,7 @@ TEST
 if __name__ == "__main__":
     import asyncio
     from core.data_mq.topic_create import create_topic
-    from core.data_mq.s3_sink_connect import (
-        topic_gender,
-        topic_age,
-        topic_no_age,
-        topic_no_gender,
-        avg_topic_age,
-        avg_topic_gender,
-        avg_topic_n_age,
-        avg_topic_n_gender,
-    )
+    from core.data_mq.s3_sink_connect import sink_connection
     from core.congestion_response.seoul_congestion_api import (
         AsyncSeoulCongestionDataSending as ADS,
     )
@@ -24,19 +15,8 @@ if __name__ == "__main__":
     )
 
     async def main():
-        loop = asyncio.get_event_loop()
-
         try:
-            await loop.run_in_executor(None, create_topic)
-
-            topic_gender
-            topic_age
-            topic_no_age
-            topic_no_gender
-            avg_topic_age
-            avg_topic_gender
-            avg_topic_n_age
-            avg_topic_n_gender
+            create_topic()
 
             task = [
                 asyncio.create_task(
