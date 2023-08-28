@@ -24,6 +24,7 @@ if __name__ == "__main__":
     )
 
     async def main():
+        await create_topic()
         topic_gender
         topic_age
         topic_no_age
@@ -33,8 +34,8 @@ if __name__ == "__main__":
         avg_topic_n_age
         avg_topic_n_gender
 
+        await asyncio.sleep(6)
         task = [
-            asyncio.create_task(create_topic()),
             asyncio.create_task(
                 ADS(AgeCongestionRate()).async_popular_congestion("AGE")
             ),
