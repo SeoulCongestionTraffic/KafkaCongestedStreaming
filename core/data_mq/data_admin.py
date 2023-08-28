@@ -12,7 +12,7 @@ logger = log(
 )
 
 
-async def new_topic_initialization(
+def new_topic_initialization(
     topic: str, partition: int, replication_factor: int
 ) -> None:
     """new topic create
