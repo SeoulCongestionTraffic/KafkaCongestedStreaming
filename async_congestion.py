@@ -4,6 +4,7 @@ TEST
 
 if __name__ == "__main__":
     import asyncio
+    from core.data_mq.s3_sink_connect import sink_connection
     from core.congestion_response.seoul_congestion_api import (
         AsyncSeoulCongestionDataSending as ADS,
     )
@@ -20,6 +21,7 @@ if __name__ == "__main__":
             asyncio.create_task(
                 ADS(GenderCongestionRate()).async_popular_congestion("GENDER")
             ),
+            asyncio.create_task(sink_connection()),
         ]
         await asyncio.gather(*task)
 
