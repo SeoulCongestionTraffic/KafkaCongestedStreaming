@@ -29,7 +29,8 @@ def sink_connection(topics: list[str], name: str, tasks: str):
             "connector.class": "io.confluent.connect.s3.S3SinkConnector",
             "tasks.max": tasks,  # 병렬 처리를 위한 태스크 수
             "topics": topics,  # 콤마로 구분된 토픽 리스트
-            "s3.bucket.name": f"de-06-01-sparkcheckpointinstruction/{name}",
+            "s3.bucket.name": "de-06-01-sparkcheckpointinstruction",
+            "topics.dir": f"{name}",
             "s3.region": "ap-northeast-2",
             "flush.size": "300",  # S3에 쓰기 전에 버퍼에 쌓을 레코드 수
             "storage.class": "io.confluent.connect.s3.storage.S3Storage",
