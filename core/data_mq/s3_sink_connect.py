@@ -38,7 +38,7 @@ def sink_connection(topics: list[str], name: str, tasks: str, typed: str):
             "key.converter.schemas.enable": True,  # <- 스키마 활성화 (일반적으로 Parquet은 스키마를 필요로 함)
             "value.converter.schemas.enable": True,  # <- 스키마 활성화
             "value.converter": "org.apache.kafka.connect.json.JsonConverter",
-            "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+            "key.converter": "org.apache.kafka.connect.json.StringConverter",
             "partitioner.class": "io.confluent.connect.storage.partitioner.TimeBasedPartitioner",
             "path.format": "YYYY/MM/dd",
             "locale": "ko-KR",
