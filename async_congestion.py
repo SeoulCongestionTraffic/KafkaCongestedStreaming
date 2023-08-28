@@ -23,6 +23,16 @@ if __name__ == "__main__":
     )
 
     async def main():
+        topic_gender
+        topic_age
+        topic_no_age
+        topic_no_gender
+        avg_topic_age
+        avg_topic_gender
+        avg_topic_n_age
+        avg_topic_n_gender
+
+        await asyncio.sleep(1)
         task = [
             asyncio.create_task(
                 ADS(AgeCongestionRate()).async_popular_congestion("AGE")
@@ -33,15 +43,6 @@ if __name__ == "__main__":
         ]
 
         await asyncio.gather(*task)
-
-        topic_gender,
-        topic_age,
-        topic_no_age,
-        topic_no_gender,
-        avg_topic_age,
-        avg_topic_gender,
-        avg_topic_n_age,
-        avg_topic_n_gender,
 
     # asyncio를 이용해 메인 함수를 실행
     asyncio.run(main())
