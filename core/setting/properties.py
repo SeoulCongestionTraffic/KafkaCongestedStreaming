@@ -166,3 +166,33 @@ def _extracted_from_transform_data_32(obj, transform_data) -> dict:
     if "fcst_congest_lvl" in new_obj:
         new_obj["fcst_congest_lvl"] = get_congestion_value(new_obj["fcst_congest_lvl"])
     return new_obj
+
+
+normal_topic_age = [
+    DEVMKT_AGE,
+    PALCULT_AGE,
+    PARK_AGE,
+    POPAREA_AGE,
+    TOURZONE_AGE,
+]
+normal_topic_gender = [
+    DEVMKT_GENDER,
+    PALCULT_GENDER,
+    PARK_GENDER,
+    POPAREA_GENDER,
+    TOURZONE_GENDER,
+]
+normal_topic_no_age = [
+    DEVMKT_NOF_AGE,
+    PALCULT_NOF_AGE,
+    PARK_NOF_AGE,
+    POPAREA_NOF_AGE,
+    TOURZONE_NOF_AGE,
+]
+normal_topic_no_gender = [
+    DEVMKT_NOF_GENDER,
+    PALCULT_NOF_GENDER,
+    PARK_NOF_GENDER,
+    POPAREA_NOF_GENDER,
+    TOURZONE_NOF_GENDER,
+]

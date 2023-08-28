@@ -4,7 +4,16 @@ TEST
 
 if __name__ == "__main__":
     import asyncio
-    from core.data_mq.s3_sink_connect import normal_topic, avg_topic
+    from core.data_mq.s3_sink_connect import (
+        topic_gender,
+        topic_age,
+        topic_no_age,
+        topic_no_gender,
+        avg_topic_age,
+        avg_topic_gender,
+        avg_topic_n_age,
+        avg_topic_n_gender,
+    )
     from core.congestion_response.seoul_congestion_api import (
         AsyncSeoulCongestionDataSending as ADS,
     )
@@ -14,8 +23,14 @@ if __name__ == "__main__":
     )
 
     async def main():
-        normal_topic
-        avg_topic
+        topic_gender
+        topic_age
+        topic_no_age
+        topic_no_gender
+        avg_topic_age
+        avg_topic_gender
+        avg_topic_n_age
+        avg_topic_n_gender
         task = [
             asyncio.create_task(
                 ADS(AgeCongestionRate()).async_popular_congestion("AGE")

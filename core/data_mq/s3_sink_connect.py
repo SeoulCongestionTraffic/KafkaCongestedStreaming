@@ -4,68 +4,18 @@ from core.setting.properties import (
     BOOTSTRAP_SERVER,
 )
 from core.setting.properties import (
-    DEVMKT_AGE,
-    PALCULT_AGE,
-    PARK_AGE,
-    POPAREA_AGE,
-    TOURZONE_AGE,
-    DEVMKT_NOF_AGE,
-    PALCULT_NOF_AGE,
-    PARK_NOF_AGE,
-    POPAREA_NOF_AGE,
-    TOURZONE_NOF_AGE,
-)
-
-from core.setting.properties import (
-    DEVMKT_NOF_GENDER,
-    PALCULT_NOF_GENDER,
-    PARK_NOF_GENDER,
-    POPAREA_NOF_GENDER,
-    TOURZONE_NOF_GENDER,
-    DEVMKT_GENDER,
-    PALCULT_GENDER,
-    PARK_GENDER,
-    POPAREA_GENDER,
-    TOURZONE_GENDER,
-)
-from core.setting.properties import (
     AVG_AGE_TOPIC,
     AVG_GENDER_TOPIC,
     AVG_N_AGE_TOPIC,
     AVG_N_GENDER_TOPIC,
+    normal_topic_gender,
+    normal_topic_age,
+    normal_topic_no_age,
+    normal_topic_no_gender,
 )
 
-normal_topic = [
-    DEVMKT_AGE,
-    PALCULT_AGE,
-    PARK_AGE,
-    POPAREA_AGE,
-    TOURZONE_AGE,
-    DEVMKT_NOF_AGE,
-    PALCULT_NOF_AGE,
-    PARK_NOF_AGE,
-    POPAREA_NOF_AGE,
-    TOURZONE_NOF_AGE,
-    DEVMKT_GENDER,
-    PALCULT_GENDER,
-    PARK_GENDER,
-    POPAREA_GENDER,
-    TOURZONE_GENDER,
-    DEVMKT_NOF_GENDER,
-    PALCULT_NOF_GENDER,
-    PARK_NOF_GENDER,
-    POPAREA_NOF_GENDER,
-    TOURZONE_NOF_GENDER,
-]
-avg_topic = [
-    AVG_AGE_TOPIC,
-    AVG_GENDER_TOPIC,
-    AVG_N_AGE_TOPIC,
-    AVG_N_GENDER_TOPIC,
-]
 
-
-def sink_connection(topics: list[str], name: str):
+def sink_connection(topics: list[str], name: str, tasks: str):
     KAFKA_CONNECT_URL = "http://localhost:8083"
 
     headers = {
@@ -77,8 +27,8 @@ def sink_connection(topics: list[str], name: str):
         "name": f"s3-sink-connector-region-seoul-injection-{name}",
         "config": {
             "connector.class": "io.confluent.connect.s3.S3SinkConnector",
-            "tasks.max": "3",  # 병렬 처리를 위한 태스크 수
-            "topics": ",".join(topics),  # 콤마로 구분된 토픽 리스트
+            "tasks.max": tasks,  # 병렬 처리를 위한 태스크 수
+            "topics": topics,  # 콤마로 구분된 토픽 리스트
             "s3.bucket.name": "de-06-01-sparkcheckpointinstruction",
             "s3.region": "ap-northeast-2",
             "flush.size": "300",  # S3에 쓰기 전에 버퍼에 쌓을 레코드 수
@@ -106,5 +56,28 @@ def sink_connection(topics: list[str], name: str):
     return print(response.json())
 
 
-normal_topic = sink_connection(topics=normal_topic, name="nonmal")
-avg_topic = sink_connection(topics=avg_topic, name="avg")
+topic_gender = sink_connection(
+    topics=",".join(normal_topic_gender), name="nonmal_gender_pred", tasks=2
+)
+topic_no_gender = sink_connection(
+    topics=",".join(normal_topic_no_gender), name="nonmal_gender", tasks=2
+)
+
+topic_age = sink_connection(
+    topics=",".join(normal_topic_age), name="normal_age_pred", tasks=2
+)
+topic_no_age = sink_connection(
+    topics=",".join(normal_topic_no_age), name="normal_age", tasks=2
+)
+
+
+avg_topic_age = sink_connection(topics=AVG_AGE_TOPIC, name="avg_topic_age", tasks=1)
+avg_topic_gender = sink_connection(
+    topics=AVG_GENDER_TOPIC, name="avg_topic_gender", tasks=1
+)
+avg_topic_n_age = sink_connection(
+    topics=AVG_N_AGE_TOPIC, name="avg_topic_n_age", tasks=1
+)
+avg_topic_n_gender = sink_connection(
+    topics=AVG_N_GENDER_TOPIC, name="avg_topic_n_gender", tasks=1
+)
