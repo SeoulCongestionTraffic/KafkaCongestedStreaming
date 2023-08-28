@@ -40,7 +40,7 @@ def sink_connection(topics: list[str], name: str, tasks: str, typed: str):
             "key.converter": "org.apache.kafka.connect.storage.StringConverter",
             "value.converter": "org.apache.kafka.connect.json.JsonConverter",
             "partitioner.class": "io.confluent.connect.storage.partitioner.TimeBasedPartitioner",
-            "path.format": "YYYY/MM/dd",
+            "path.format": "year=YYYY/month=MM/day=dd",
             "locale": "ko-KR",
             "timezone": "UTC",
             "partition.duration.ms": 60000,

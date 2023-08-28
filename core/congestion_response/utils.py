@@ -5,7 +5,6 @@ import tracemalloc
 from pathlib import Path
 from typing import Any, Union
 
-import asyncio
 import aiohttp
 import xmltodict
 import pandas as pd
