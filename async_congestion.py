@@ -4,6 +4,7 @@ TEST
 
 if __name__ == "__main__":
     import asyncio
+    from core.data_mq.topic_create import create_topic
     from core.data_mq.s3_sink_connect import (
         topic_gender,
         topic_age,
@@ -23,6 +24,8 @@ if __name__ == "__main__":
     )
 
     async def main():
+        create_topic()
+
         topic_gender
         topic_age
         topic_no_age

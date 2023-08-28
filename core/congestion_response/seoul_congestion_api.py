@@ -7,7 +7,6 @@ from typing import Any, Type
 from aiokafka.errors import KafkaConnectionError
 
 from core.data_mq.data_interaction import produce_sending
-from core.data_mq.topic_create import create_topic
 from core.congestion_response.abstract_class import (
     AbstractSeoulDataSending,
     AbstractDataTransfore,
@@ -95,7 +94,6 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
             location (str): 장소.
             rate_type (str): 혼잡도 타입.
         """
-        create_topic()
         while True:
             try:
                 for category, location in Seoul().seoul_place().items():
