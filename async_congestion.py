@@ -24,27 +24,30 @@ if __name__ == "__main__":
     )
 
     async def main():
-        await create_topic()
-        topic_gender
-        topic_age
-        topic_no_age
-        topic_no_gender
-        avg_topic_age
-        avg_topic_gender
-        avg_topic_n_age
-        avg_topic_n_gender
+        try:
+            await create_topic()
+            topic_gender
+            topic_age
+            topic_no_age
+            topic_no_gender
+            avg_topic_age
+            avg_topic_gender
+            avg_topic_n_age
+            avg_topic_n_gender
 
-        await asyncio.sleep(6)
-        task = [
-            asyncio.create_task(
-                ADS(AgeCongestionRate()).async_popular_congestion("AGE")
-            ),
-            asyncio.create_task(
-                ADS(GenderCongestionRate()).async_popular_congestion("GENDER")
-            ),
-        ]
+            await asyncio.sleep(6)
+            task = [
+                asyncio.create_task(
+                    ADS(AgeCongestionRate()).async_popular_congestion("AGE")
+                ),
+                asyncio.create_task(
+                    ADS(GenderCongestionRate()).async_popular_congestion("GENDER")
+                ),
+            ]
 
-        await asyncio.gather(*task)
+            await asyncio.gather(*task)
+        except Exception as error:
+            print(error)
 
     # asyncio를 이용해 메인 함수를 실행
     asyncio.run(main())
