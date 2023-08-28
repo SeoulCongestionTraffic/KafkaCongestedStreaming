@@ -24,8 +24,6 @@ if __name__ == "__main__":
     )
 
     async def main():
-        create_topic()
-
         topic_gender
         topic_age
         topic_no_age
