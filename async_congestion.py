@@ -33,7 +33,6 @@ if __name__ == "__main__":
         ]
 
         await asyncio.gather(*task)
-        await asyncio.sleep(1)
 
         topic_gender,
         topic_age,
