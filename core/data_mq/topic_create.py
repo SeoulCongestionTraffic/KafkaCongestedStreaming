@@ -37,7 +37,7 @@ from core.setting.properties import (
 )
 
 
-def create_topic() -> None:
+async def create_topic() -> None:
     """
     Topic create
     """
@@ -70,6 +70,6 @@ def create_topic() -> None:
     partition: list[int] = [3 for _ in range(len(topic))]
     replication: list[int] = [3 for _ in range(len(topic))]
 
-    return new_topic_initialization(
+    return await new_topic_initialization(
         topic=topic, partition=partition, replication_factor=replication
     )
