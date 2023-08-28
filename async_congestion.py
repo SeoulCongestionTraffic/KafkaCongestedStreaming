@@ -21,8 +21,9 @@ if __name__ == "__main__":
             asyncio.create_task(
                 ADS(GenderCongestionRate()).async_popular_congestion("GENDER")
             ),
-            asyncio.create_task(sink_connection()),
         ]
+        await asyncio.sleep(1)
+        sink_connection()
         await asyncio.gather(*task)
 
     # asyncio를 이용해 메인 함수를 실행
