@@ -34,14 +34,14 @@ def sink_connection(topics: list[str], name: str, tasks: str, typed: str):
             "s3.region": "ap-northeast-2",
             "flush.size": "300",  # S3에 쓰기 전에 버퍼에 쌓을 레코드 수
             "storage.class": "io.confluent.connect.s3.storage.S3Storage",
-            "format.class": "io.confluent.connect.s3.format.json.JsonFormat",
+            "format.class": "io.confluent.connect.s3.format.parquet.ParquetFormat",  # Parquet 포맷 지정
             "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-            "value.converter": "org.apache.kafka.connect.storage.StringConverter",
+            "value.converter": "org.apache.kafka.connect.converters.ByteArrayConverter",  # Parquet에는 바이트 배열이 필요할 수 있습니다.
             "partitioner.class": "io.confluent.connect.storage.partitioner.TimeBasedPartitioner",
             "path.format": "YYYY/MM/dd",
             "locale": "ko-KR",
             "timezone": "UTC",
-            "schemas.enable": False,
+            "schemas.enable": False,  # 스키마를 활성화할지 여부
             "partition.duration.ms": 60000,
             "bootstrap.servers": BOOTSTRAP_SERVER,
         },
