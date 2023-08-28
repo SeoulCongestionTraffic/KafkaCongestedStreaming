@@ -25,7 +25,7 @@ if __name__ == "__main__":
 
     async def main():
         try:
-            await create_topic()
+            create_topic()
             topic_gender
             topic_age
             topic_no_age
