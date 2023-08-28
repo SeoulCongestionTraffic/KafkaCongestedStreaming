@@ -15,7 +15,7 @@ from core.setting.properties import (
 )
 
 
-def sink_connection(topics: list[str], name: str, tasks: str):
+def sink_connection(topics: list[str], name: str, tasks: str, typed: str):
     KAFKA_CONNECT_URL = "http://localhost:8083"
 
     headers = {
@@ -30,7 +30,7 @@ def sink_connection(topics: list[str], name: str, tasks: str):
             "tasks.max": tasks,  # 병렬 처리를 위한 태스크 수
             "topics": topics,  # 콤마로 구분된 토픽 리스트
             "s3.bucket.name": "de-06-01-sparkcheckpointinstruction",
-            "topics.dir": f"{name}",
+            "topics.dir": f"{typed}/{name}",
             "s3.region": "ap-northeast-2",
             "flush.size": "300",  # S3에 쓰기 전에 버퍼에 쌓을 레코드 수
             "storage.class": "io.confluent.connect.s3.storage.S3Storage",
@@ -58,27 +58,53 @@ def sink_connection(topics: list[str], name: str, tasks: str):
 
 
 topic_gender = sink_connection(
-    topics=",".join(normal_topic_gender), name="nonmal_gender_pred", tasks=2
+    topics=",".join(normal_topic_gender),
+    name="nonmal_gender_pred",
+    tasks=2,
+    typed="normal",
 )
 topic_no_gender = sink_connection(
-    topics=",".join(normal_topic_no_gender), name="nonmal_gender", tasks=2
+    topics=",".join(normal_topic_no_gender),
+    name="nonmal_gender",
+    tasks=2,
+    typed="normal",
 )
 
 topic_age = sink_connection(
-    topics=",".join(normal_topic_age), name="normal_age_pred", tasks=2
+    topics=",".join(normal_topic_age),
+    name="normal_age_pred",
+    tasks=2,
+    typed="normal",
 )
 topic_no_age = sink_connection(
-    topics=",".join(normal_topic_no_age), name="normal_age", tasks=2
+    topics=",".join(normal_topic_no_age),
+    name="normal_age",
+    tasks=2,
+    typed="normal",
 )
 
 
-avg_topic_age = sink_connection(topics=AVG_AGE_TOPIC, name="avg_topic_age", tasks=1)
+avg_topic_age = sink_connection(
+    topics=AVG_AGE_TOPIC,
+    name="avg_topic_age",
+    tasks=1,
+    typed="avg",
+)
 avg_topic_gender = sink_connection(
-    topics=AVG_GENDER_TOPIC, name="avg_topic_gender", tasks=1
+    topics=AVG_GENDER_TOPIC,
+    name="avg_topic_gender",
+    tasks=1,
+    typed="avg",
 )
 avg_topic_n_age = sink_connection(
-    topics=AVG_N_AGE_TOPIC, name="avg_topic_n_age", tasks=1
+    topics=AVG_N_AGE_TOPIC,
+    name="avg_topic_n_age",
+    tasks=1,
+    typed="avg",
 )
 avg_topic_n_gender = sink_connection(
-    topics=AVG_N_GENDER_TOPIC, name="avg_topic_n_gender", tasks=1
+    topics=AVG_N_GENDER_TOPIC,
+    name="avg_topic_n_gender",
+    tasks=1,
+    typed="avg",
 )
