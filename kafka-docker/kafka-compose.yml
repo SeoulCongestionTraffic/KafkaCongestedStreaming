@@ -145,7 +145,6 @@ services:
     networks:
       - kafka-network
 
-
   akhq:
     image: tchiotludo/akhq:latest
     hostname: akhq
