@@ -75,7 +75,7 @@ def sink_connection():
         "name": "s3-sink-connector-region-seoul-injection-00107",
         "config": {
             "connector.class": "io.confluent.connect.s3.S3SinkConnector",
-            "tasks.max": "1",  # 병렬 처리를 위한 태스크 수
+            "tasks.max": "3",  # 병렬 처리를 위한 태스크 수
             "topics": ",".join(topic),  # 콤마로 구분된 토픽 리스트
             "s3.bucket.name": "de-06-01-sparkcheckpointinstruction",
             "s3.region": "ap-northeast-2",
