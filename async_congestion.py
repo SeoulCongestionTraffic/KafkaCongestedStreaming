@@ -24,9 +24,10 @@ if __name__ == "__main__":
     )
 
     async def main():
+        loop = asyncio.get_event_loop()
+
         try:
-            create_topic()
-            await asyncio.sleep(6)
+            await loop.run_in_executor(None, create_topic)
 
             topic_gender
             topic_age
