@@ -35,8 +35,6 @@ def sink_connection(topics: list[str], name: str, tasks: str, typed: str):
             "flush.size": "300",  # S3에 쓰기 전에 버퍼에 쌓을 레코드 수
             "storage.class": "io.confluent.connect.s3.storage.S3Storage",
             "format.class": "io.confluent.connect.s3.format.parquet.ParquetFormat",  # Parquet 포맷 지정
-            "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-            "value.converter": "org.apache.kafka.connect.converters.StringConverter",  # Parquet에는 바이트 배열이 필요할 수 있습니다.
             "partitioner.class": "io.confluent.connect.storage.partitioner.TimeBasedPartitioner",
             "path.format": "YYYY/MM/dd",
             "locale": "ko-KR",
