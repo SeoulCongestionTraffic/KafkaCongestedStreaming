@@ -38,7 +38,7 @@ def sink_connection(topics: list[str], name: str, tasks: str, typed: str):
             "key.converter": "org.apache.kafka.connect.storage.StringConverter",
             "value.converter": "org.apache.kafka.connect.storage.StringConverter",
             "partitioner.class": "io.confluent.connect.storage.partitioner.TimeBasedPartitioner",
-            "path.format": "YYYY/MM/dd/HH",
+            "path.format": "YYYY/MM/dd",
             "locale": "ko-KR",
             "timezone": "UTC",
             "schemas.enable": False,
