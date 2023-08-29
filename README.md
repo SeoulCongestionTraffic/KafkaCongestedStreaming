@@ -2,9 +2,6 @@
 
 ## 서울 시 실시간 인구혼잡도 평균 계산 작성
 
-### architecture 
-<img width="500" alt="image" src="https://github.com/SeoulCongestionTraffic/KafkaCongestedStreaming/assets/52487610/659d1b57-3e28-42dc-8ca0-2f5c0097c9da">
-
 ### 서울시 도시혼잡도 URL 
 - https://data.seoul.go.kr/SeoulRtd/
 
