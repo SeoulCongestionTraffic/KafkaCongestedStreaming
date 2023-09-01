@@ -181,6 +181,7 @@ services:
     image: grafana/grafana-oss:8.2.6
     container_name: grafana
     restart: unless-stopped
+    user: "1000:1000"
 #    environment:
 #      - GF_INSTALL_PLUGINS=hamedkarbasi93-kafka-datasource
 #    platform: 'linux/amd64' # hamedkarbasi93-kafka-datasource 이 플러그인에서 arm64를 지원하지 않음
@@ -194,7 +195,7 @@ services:
   prometheus:
     image: prom/prometheus
     user: "1000:1000"
-    
+
     container_name: prometheus
     volumes:
       - ./visualization/prometheus/config:/etc/prometheus
