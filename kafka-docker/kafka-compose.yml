@@ -220,6 +220,7 @@ services:
       - --kafka.server=kafka3:39092 
     networks:
       - kafka-network
+    restart: unless-stopped
     depends_on:
       - kafka-1
       - kafka-2
