@@ -220,6 +220,10 @@ services:
       - --kafka.server=kafka3:39092 
     networks:
       - kafka-network
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
 
 networks:
   kafka-network:
