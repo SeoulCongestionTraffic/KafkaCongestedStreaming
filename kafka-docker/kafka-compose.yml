@@ -193,7 +193,7 @@ services:
 
   prometheus:
     image: prom/prometheus
-    user: "1000:1000"
+    user: root
 
     container_name: prometheus
     volumes:
