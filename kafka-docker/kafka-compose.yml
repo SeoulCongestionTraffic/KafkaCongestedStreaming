@@ -193,8 +193,8 @@ services:
 
   prometheus:
     image: prom/prometheus
-    user: root
-
+    user: "1000:1000"
+    
     container_name: prometheus
     volumes:
       - ./visualization/prometheus/config:/etc/prometheus
