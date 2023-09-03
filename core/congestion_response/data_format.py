@@ -21,7 +21,7 @@ class BasePopulationRate(BaseModel):
 
     category: str
     area_name: str
-    ppltn_time: float
+    ppltn_time: str
     area_congestion_lvl: int
     area_congestion_msg: str
     area_ppltn_min: int
@@ -84,7 +84,7 @@ class BasePopulationRate(BaseModel):
             return cls(
                 category=category,
                 area_name=data["AREA_NM"],
-                ppltn_time=utc_time(data["PPLTN_TIME"]),
+                ppltn_time=data["PPLTN_TIME"],
                 area_congestion_lvl=get_congestion_value(data["AREA_CONGEST_LVL"]),
                 area_congestion_msg=data["AREA_CONGEST_MSG"],
                 area_ppltn_min=int(data["AREA_PPLTN_MIN"]),
