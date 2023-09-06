@@ -166,3 +166,5 @@ pyproject.toml
 test.py
 test2.py
 kafka-docker/visualization/volume
+kafka-docker/visualization/grafana/
+kafka-docker/visualization/prometheus/volume/

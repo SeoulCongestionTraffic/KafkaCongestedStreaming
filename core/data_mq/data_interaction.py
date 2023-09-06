@@ -49,9 +49,6 @@ async def produce_sending(topic: Any, message: Any, key: Any = None):
     producer = AIOKafkaProducer(**config)
 
     await producer.start()
-    if isinstance(message, bytes):
-        message = message.decode("utf-8")
-
     try:
         await producer.send_and_wait(topic=topic, value=message, key=key)
         size: int = deep_getsizeof(message)
