@@ -5,6 +5,7 @@ import tracemalloc
 from pathlib import Path
 from typing import Any, Union
 
+import asyncio
 import aiohttp
 import xmltodict
 import pandas as pd
@@ -51,7 +52,7 @@ class AsyncResponseDataFactory:
         """
         async with aiohttp.ClientSession() as session:
             response = await session.get(url)
-            # await asyncio.sleep(1)
+            await asyncio.sleep(1)
             match response.status:
                 case 200:
                     return await self._xml_to_dict_convert(await response.text())

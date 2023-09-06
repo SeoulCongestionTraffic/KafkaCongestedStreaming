@@ -11,7 +11,6 @@ import logging
 from pydantic import BaseModel, ValidationError
 from core.setting.properties import (
     transform_data,
-    utc_time,
     get_congestion_value,
 )
 

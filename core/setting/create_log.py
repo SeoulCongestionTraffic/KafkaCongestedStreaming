@@ -66,7 +66,7 @@ class SocketLogCustomer:
             self.base_path = Path(__file__).parent.parent.parent / "streaming" / "log"
 
     def create_logger(
-        self, log_name: str, log_type: str, rate_type: str, noF: bool
+        self, log_name: str, log_type: str, rate_type: str, nof: bool
     ) -> logging.Logger:
         """
         지정된 로그 이름과 유형을 사용하여 로거를 생성
@@ -82,7 +82,7 @@ class SocketLogCustomer:
         """
         try:
             return self._extracted_from_create_logger_18(
-                log_name, noF, log_type, rate_type
+                log_name, nof, log_type, rate_type
             )
         except (FileNotFoundError, FileExistsError) as error:
             logger = logging.getLogger(__name__)
@@ -117,7 +117,7 @@ class SocketLogCustomer:
         message: str,
         level: str = "info",
         rate_type: str = None,
-        noF: bool = None,
+        nof: bool = None,
     ):
         """
         지정된 로그 이름, 유형 및 레벨을 사용하여 메시지를 기록
@@ -130,12 +130,12 @@ class SocketLogCustomer:
         - rate_type: 혼잡도 타입 (AGE or GENDER).
         - noF: FCST_YN 플래그, 예보가 포함되어 있지 않은 경우 True.
         """
-        logger = self.create_logger(log_name, log_type, rate_type, noF)
+        logger = self.create_logger(log_name, log_type, rate_type, nof)
         log_func = getattr(logger, level, "info")
         log_func(message)
 
     async def connection(
-        self, location: str, message: str, rate_type: str, noF: bool
+        self, location: str, message: str, rate_type: str, nof: bool
     ) -> None:
         """
         특정 장소 관련된 연결 메시지를 기록
@@ -148,11 +148,11 @@ class SocketLogCustomer:
         """
         log_name = f"{location}_connection.log"
         await self.log_message(
-            log_name, "connection", message, rate_type=rate_type, noF=noF
+            log_name, "connection", message, rate_type=rate_type, nof=nof
         )
 
     async def data_log(
-        self, location: str, message: str, rate_type: str, noF: bool
+        self, location: str, message: str, rate_type: str, nof: bool
     ) -> None:
         """
         특정 장소 생성된 데이터 기록
@@ -164,7 +164,7 @@ class SocketLogCustomer:
         - noF: FCST_YN 플래그, 예보가 포함되어 있지 않은 경우 True.
         """
         log_name = f"{location}_data.log"
-        await self.log_message(log_name, "data", message, rate_type=rate_type, noF=noF)
+        await self.log_message(log_name, "data", message, rate_type=rate_type, nof=nof)
 
     async def error_log(self, error_type: str, message: str) -> None:
         """

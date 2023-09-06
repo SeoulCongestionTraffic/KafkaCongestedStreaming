@@ -15,7 +15,7 @@ from core.setting.properties import (
 )
 
 
-def sink_connection(topics: list[str], name: str, tasks: str, typed: str):
+def sink_connection(topics: list[str], name: str, tasks: str, typed: str) -> None:
     KAFKA_CONNECT_URL = "http://localhost:8083"
 
     headers = {

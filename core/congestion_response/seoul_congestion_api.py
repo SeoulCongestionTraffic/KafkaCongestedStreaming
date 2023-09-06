@@ -64,7 +64,7 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
                         location=f"{transformed_category}_{rate_type}",
                         rate_type=rate_type,
                         message=rate_schema,
-                        noF=False,
+                        nof=False,
                     )
 
                 case "N":
@@ -77,7 +77,7 @@ class AsyncSeoulCongestionDataSending(AbstractSeoulDataSending):
                         location=f"{transformed_category}_noF_{rate_type}",
                         rate_type=rate_type,
                         message=rate_schema,
-                        noF=True,
+                        nof=True,
                     )
 
         except KafkaConnectionError as error:

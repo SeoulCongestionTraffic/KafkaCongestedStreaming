@@ -154,8 +154,8 @@ def transform_data(obj) -> list | dict | Any:
     return obj
 
 
-def _extracted_from_transform_data_32(obj, transform_data) -> dict:
-    new_obj = {k.lower(): transform_data(v) for k, v in obj.items()}
+def _extracted_from_transform_data_32(obj, data) -> dict:
+    new_obj = {k.lower(): data(v) for k, v in obj.items()}
     # fcst_ppltn_min 및 fcst_ppltn_max의 값을 실수로 변환
     if "fcst_ppltn_min" in new_obj:
         new_obj["fcst_ppltn_min"] = float(new_obj["fcst_ppltn_min"])
