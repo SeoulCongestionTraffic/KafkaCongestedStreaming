@@ -1,5 +1,9 @@
-import requests
+"""
+kafka s3 connection setting
+"""
+
 import json
+import requests
 from core.setting.properties import (
     BOOTSTRAP_SERVER,
 )

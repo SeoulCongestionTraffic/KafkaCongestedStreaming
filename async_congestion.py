@@ -14,9 +14,10 @@ if __name__ == "__main__":
     )
 
     async def main():
+        """main"""
         try:
             create_topic()
-            from core.data_mq.s3_sink_connect import sink_connection
+            # from core.data_mq.s3_sink_connect import sink_connection
 
             task = [
                 asyncio.create_task(
